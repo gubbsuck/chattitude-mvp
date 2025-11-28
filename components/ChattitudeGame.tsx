@@ -208,7 +208,7 @@ Svara ENDAST JSON:
                 onChange={(e) => setThesis(e.target.value)}
                 placeholder="T.ex. 'AI kommer ersätta de flesta kreativa jobb inom 5 år'"
                 className="w-full p-3 border-2 border-gray-200 rounded-lg resize-none focus:outline-none focus:border-green-400"
-                rows="3"
+                rows={3}
               />
             </div>
 
@@ -361,7 +361,7 @@ Svara ENDAST JSON:
               placeholder="Skriv ditt meddelande..."
               disabled={countdown !== null}
               className="w-full p-3 border-2 border-gray-200 rounded-xl resize-none focus:outline-none focus:border-purple-400 disabled:bg-gray-50"
-              rows="3"
+              rows={3}
             />
             
             <button
