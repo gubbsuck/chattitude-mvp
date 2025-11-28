@@ -88,7 +88,7 @@ const ChattitudeGame = () => {
     setAnalyzing(false);
   };
 
-  const analyzeWithAI = async (message, context) => {
+  const analyzeWithAI = async (message: string, context: string) => {
     try {
       const response = await fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",
@@ -116,7 +116,7 @@ Svara ENDAST JSON:
         })
       });
 
-      const data = await response.json();
+      const data: any = await response.json();
       const text = data.content[0].text.trim().replace(/```json\n?|```\n?/g, '');
       return JSON.parse(text);
     } catch (error) {
