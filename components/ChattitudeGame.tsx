@@ -50,7 +50,7 @@ const ChattitudeGame = () => {
     setAnalyzing(true);
     
     const playerName = currentPlayer === 1 ? player1Name : player2Name;
-    const playerKey = `player${currentPlayer}`;
+    const playerKey = currentPlayer === 1 ? 'player1' : 'player2' as 'player1' | 'player2';
     
     // Simple AI analysis
     const context = messages.length > 0 
