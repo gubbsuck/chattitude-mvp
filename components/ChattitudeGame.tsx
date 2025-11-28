@@ -7,12 +7,12 @@ const ChattitudeGame = () => {
   const [player2Name, setPlayer2Name] = useState('');
   const [thesis, setThesis] = useState('');
   const [currentPlayer, setCurrentPlayer] = useState(1);
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<any[]>([]);
   const [dialogQuality, setDialogQuality] = useState(100);
   const [currentInput, setCurrentInput] = useState('');
-  const [countdown, setCountdown] = useState(null);
+  const [countdown, setCountdown] = useState<number | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
-  const [expandedMessage, setExpandedMessage] = useState(null);
+  const [expandedMessage, setExpandedMessage] = useState<number | null>(null);
   const [playerStats, setPlayerStats] = useState({
     player1: { constructive: 0, destructive: 0 },
     player2: { constructive: 0, destructive: 0 }
