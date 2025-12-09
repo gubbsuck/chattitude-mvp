@@ -98,19 +98,103 @@ const ChattitudeGame = () => {
           max_tokens: 1000,
           messages: [{
             role: "user",
-            content: `Analysera detta debattmeddelande:
+            content: `Du är expert på att analysera debatter och identifiera retoriska tekniker.
 
-Tidigare: ${context}
-Meddelande: "${message}"
+KONTEXT: ${context}
 
-Identifiera destruktiva tekniker (Personal Attack, Strawmanning, Whataboutism, Slippery Slope, etc) eller konstruktiva (Re-Expression, Steelmanning, Agreement, Seeking Clarification, etc).
+AKTUELLT MEDDELANDE: "${message}"
 
-Svara ENDAST JSON:
+Analysera meddelandet noggrant och identifiera om det använder destruktiva eller konstruktiva debatttekniker.
+
+=== DESTRUKTIVA TEKNIKER (dirty tricks) ===
+
+**Loaded Question / Begging the Question:**
+Fråga som innehåller en obevisad förutsättning.
+Exempel 1: "Varför ska kvinnor acceptera löneskillnader?" (när motparten aldrig sagt att de ska det)
+Exempel 2: "När slutade du slå din fru?" (antar att personen gjort det)
+Exempel 3: "Varför hatar du frihet?" (antar hat som aldrig uttryckts)
+
+**Strawmanning:**
+Feltolka eller överdriva motpartens argument för att lättare attackera det.
+Exempel 1: A: "Vi bör ha strängare gränskontroller" → B: "Så du vill stänga alla gränser helt?"
+Exempel 2: A: "Kanske vi ska äta mindre kött" → B: "Du vill alltså förbjuda kött?"
+Exempel 3: A: "Polisen behöver mer utbildning" → B: "Så poliser är inkompetenta menar du?"
+
+**Personal Attack / Ad Hominem:**
+Attackera personen istället för argumentet.
+Exempel 1: "Du är bara ett privilegierat barn, vad vet du om verkligheten?"
+Exempel 2: "Givetvis tycker DU så, du är ju sosse/höger/feminist"
+Exempel 3: "Du har aldrig jobbat en dag i ditt liv, så tyst"
+
+**Whataboutism:**
+Avleda genom att peka på annat problem istället för att svara.
+Exempel 1: "Vad sägs om USA:s brott då?" (när man diskuterar Ryssland)
+Exempel 2: "Men vad sägs om DITT partis skandal för 10 år sen?"
+Exempel 3: "Varför pratar vi inte om migration istället?"
+
+**Moving Goalposts:**
+Ändra kraven när motparten uppfyller dem.
+Exempel 1: "Visa källa" → *visar* → "Nej inte den källan, en annan"
+Exempel 2: "Det fungerar inte i praktiken" → *visar att det gör det* → "Men det skalas inte upp"
+
+**Gotcha Question:**
+Ställa fällor för att få motparten att säga något dumt.
+Exempel 1: "Nämn exakt tre källor på rak arm, annars har du fel"
+Exempel 2: "Definiera feminism på 10 sekunder" (som fälla)
+
+**False Dilemma:**
+Presentera endast två alternativ när fler finns.
+Exempel 1: "Antingen är du med oss eller mot oss"
+Exempel 2: "Vi kan ha frihet ELLER säkerhet, välj ett"
+
+=== KONSTRUKTIVA TEKNIKER ===
+
+**Steelmanning:**
+Presentera motpartens argument i sin STARKASTE form.
+Exempel: "Om jag förstår dig rätt säger du att [starkt formulerat], vilket är en bra poäng"
+
+**Re-Expression / Paraphrasing:**
+Upprepa motpartens poäng för att visa förståelse.
+Exempel: "Så om jag fattar rätt menar du att...?"
+
+**Seeking Genuine Clarification:**
+Ärligt fråga vad motparten menar (inte som fälla).
+Exempel: "Kan du utveckla vad du menar med X?"
+Exempel: "Jag är osäker på hur du tänker här, kan du förklara?"
+
+**Finding Common Ground:**
+Identifiera områden där ni är överens.
+Exempel: "Vi är båda överens om att problemet existerar, skillnaden är hur vi löser det"
+
+**Acknowledging Valid Points:**
+Erkänna när motparten har rätt i något.
+Exempel: "Du har en poäng där, jag håller med om att..."
+Exempel: "Det är sant att X, men jag tänker annorlunda om Y"
+
+**Building On:**
+Utveckla motpartens idéer konstruktivt.
+Exempel: "Intressant perspektiv. Tänk om vi kombinerade din idé med..."
+
+=== INSTRUKTIONER ===
+
+VAR SÄRSKILT UPPMÄRKSAM PÅ:
+- Frågor som innehåller ej bevisade antaganden (jämför med Loaded Question-exemplen)
+- Feltolkningar av vad motparten faktiskt sa (jämför med Strawmanning-exemplen)
+- Förenklingar eller överdrifter av motpartens position
+- Försök att sätta ord i munnen på motparten
+
+CONFIDENCE-NIVÅER:
+- 85-100: Tydligt exempel på tekniken, mycket likt exemplen ovan
+- 70-84: Troligt exempel, men lite mer subtilt
+- 60-69: Möjligt exempel, viss osäkerhet
+- Under 60: För osäkert, markera som neutral
+
+Svara ENDAST med JSON:
 {
-  "technique": "teknikens namn",
+  "technique": "exakt namn på tekniken från listan ovan",
   "category": "dirty_trick" eller "constructive" eller "neutral",
   "confidence": 0-100,
-  "explanation": "kort förklaring på svenska"
+  "explanation": "konkret förklaring på svenska om VAD i meddelandet som matchar tekniken, referera gärna till liknande exempel"
 }`
           }]
         })
@@ -296,8 +380,12 @@ Svara ENDAST JSON:
                   } ${
                     msg.analysis?.category === 'dirty_trick' && msg.analysis?.confidence >= 75
                       ? 'ring-2 ring-red-400'
+                      : msg.analysis?.category === 'dirty_trick' && msg.analysis?.confidence >= 60
+                      ? 'ring-1 ring-orange-300'
                       : msg.analysis?.category === 'constructive' && msg.analysis?.confidence >= 75
                       ? 'ring-2 ring-green-400'
+                      : msg.analysis?.category === 'constructive' && msg.analysis?.confidence >= 60
+                      ? 'ring-1 ring-green-300'
                       : ''
                   }`}>
                   <div className="flex items-center justify-between mb-1">
@@ -305,8 +393,14 @@ Svara ENDAST JSON:
                     {msg.analysis?.category === 'dirty_trick' && msg.analysis?.confidence >= 75 && (
                       <div className="text-base">⚠️</div>
                     )}
+                    {msg.analysis?.category === 'dirty_trick' && msg.analysis?.confidence >= 60 && msg.analysis?.confidence < 75 && (
+                      <div className="text-base opacity-60">⚠️</div>
+                    )}
                     {msg.analysis?.category === 'constructive' && msg.analysis?.confidence >= 75 && (
                       <div className="text-base">✨</div>
+                    )}
+                    {msg.analysis?.category === 'constructive' && msg.analysis?.confidence >= 60 && msg.analysis?.confidence < 75 && (
+                      <div className="text-base opacity-60">✨</div>
                     )}
                   </div>
                   <p className="text-gray-800 break-words">{msg.text}</p>
