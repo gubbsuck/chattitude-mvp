@@ -229,103 +229,82 @@ const ChattitudeGame = () => {
           max_tokens: 1000,
           messages: [{
             role: "user",
-            content: `Du är expert på att analysera debatter och identifiera retoriska tekniker.
+            content: `Du är en STRIKT debattdomare. Din uppgift är att AKTIVT leta efter destruktiva debatttekniker. Var INTE generös - markera problem när de finns.
 
 KONTEXT: ${context}
 
 AKTUELLT MEDDELANDE: "${message}"
 
-Analysera meddelandet noggrant och identifiera om det använder destruktiva eller konstruktiva debatttekniker.
+VIKTIGT: De flesta meddelanden i hetsiga debatter innehåller NÅGON form av retorisk teknik. "Neutral" ska bara användas för riktigt objektiva, sakliga påståenden.
 
-=== DESTRUKTIVA TEKNIKER (dirty tricks) ===
+=== DESTRUKTIVA TEKNIKER - LETA AKTIVT EFTER DESSA ===
 
-**Loaded Question / Begging the Question:**
-Fråga som innehåller en obevisad förutsättning.
-Exempel 1: "Varför ska kvinnor acceptera löneskillnader?" (när motparten aldrig sagt att de ska det)
-Exempel 2: "När slutade du slå din fru?" (antar att personen gjort det)
-Exempel 3: "Varför hatar du frihet?" (antar hat som aldrig uttryckts)
-
-**Strawmanning:**
-Feltolka eller överdriva motpartens argument för att lättare attackera det.
+**Strawmanning (MYCKET VANLIG):**
+Feltolka eller överdriva motpartens argument.
+Nyckelord att leta efter: "Så du säger/menar att...", "Alltså vill du...", "Med andra ord..."
 Exempel 1: A: "Vi bör ha strängare gränskontroller" → B: "Så du vill stänga alla gränser helt?"
-Exempel 2: A: "Kanske vi ska äta mindre kött" → B: "Du vill alltså förbjuda kött?"
-Exempel 3: A: "Polisen behöver mer utbildning" → B: "Så poliser är inkompetenta menar du?"
+Exempel 2: A: "Lönegap har flera orsaker" → B: "Så du säger att kvinnor inte är diskriminerade?"
+Exempel 3: A: "Polisen behöver mer utbildning" → B: "Alltså är alla poliser inkompetenta?"
+→ Om någon säger "Så du säger..." utan att motparten SA det = 90% Strawmanning
 
-**Personal Attack / Ad Hominem:**
-Attackera personen istället för argumentet.
-Exempel 1: "Du är bara ett privilegierat barn, vad vet du om verkligheten?"
-Exempel 2: "Givetvis tycker DU så, du är ju sosse/höger/feminist"
-Exempel 3: "Du har aldrig jobbat en dag i ditt liv, så tyst"
+**Loaded Question (MYCKET VANLIG):**
+Fråga med inbyggd, obevisad förutsättning.
+Nyckelord: "Varför...", "Hur kan du...", frågor som antar något
+Exempel 1: "Varför ska kvinnor acceptera X?" (antar att talaren sagt att de ska)
+Exempel 2: "Hur kan du försvara Y?" (antar att personen försvarar det)
+Exempel 3: "Varför hatar du frihet?" (antar hat)
+→ Om frågan innehåller ett antagande motparten INTE gjort = 85% Loaded Question
+
+**Personal Attack:**
+Attackera personen, inte argumentet.
+Exempel: "Du är privilegierad", "Vad vet du", "Givetvis tycker DU så"
 
 **Whataboutism:**
-Avleda genom att peka på annat problem istället för att svara.
-Exempel 1: "Vad sägs om USA:s brott då?" (när man diskuterar Ryssland)
-Exempel 2: "Men vad sägs om DITT partis skandal för 10 år sen?"
-Exempel 3: "Varför pratar vi inte om migration istället?"
-
-**Moving Goalposts:**
-Ändra kraven när motparten uppfyller dem.
-Exempel 1: "Visa källa" → *visar* → "Nej inte den källan, en annan"
-Exempel 2: "Det fungerar inte i praktiken" → *visar att det gör det* → "Men det skalas inte upp"
-
-**Gotcha Question:**
-Ställa fällor för att få motparten att säga något dumt.
-Exempel 1: "Nämn exakt tre källor på rak arm, annars har du fel"
-Exempel 2: "Definiera feminism på 10 sekunder" (som fälla)
+Peka på annat problem istället för att svara.
+Exempel: "Vad sägs om USA då?", "Ditt parti gjorde värre"
 
 **False Dilemma:**
-Presentera endast två alternativ när fler finns.
-Exempel 1: "Antingen är du med oss eller mot oss"
-Exempel 2: "Vi kan ha frihet ELLER säkerhet, välj ett"
+Bara två alternativ när fler finns.
+Exempel: "Antingen frihet ELLER säkerhet"
 
 === KONSTRUKTIVA TEKNIKER ===
 
+**Seeking Clarification:**
+Exempel: "Kan du utveckla vad du menar?"
+
+**Acknowledging:**
+Exempel: "Du har en poäng", "Det är sant att..."
+
 **Steelmanning:**
-Presentera motpartens argument i sin STARKASTE form.
-Exempel: "Om jag förstår dig rätt säger du att [starkt formulerat], vilket är en bra poäng"
+Exempel: "Om jag förstår dig rätt säger du [starkt formulerat]"
 
-**Re-Expression / Paraphrasing:**
-Upprepa motpartens poäng för att visa förståelse.
-Exempel: "Så om jag fattar rätt menar du att...?"
+=== BEDÖMNINGSREGLER ===
 
-**Seeking Genuine Clarification:**
-Ärligt fråga vad motparten menar (inte som fälla).
-Exempel: "Kan du utveckla vad du menar med X?"
-Exempel: "Jag är osäker på hur du tänker här, kan du förklara?"
+**STRIKT BEDÖMNING:**
+- Om meddelandet FELTOLKAR motparten = minst 70% Strawmanning
+- Om frågan ANTAR något obevisat = minst 75% Loaded Question
+- Om svaret UNDVIKER frågan = minst 60% Evasion
 
-**Finding Common Ground:**
-Identifiera områden där ni är överens.
-Exempel: "Vi är båda överens om att problemet existerar, skillnaden är hur vi löser det"
+**GE HÖG CONFIDENCE:**
+- 90-100: Tydligt textbook-exempel
+- 75-89: Klart exempel på tekniken
+- 60-74: Troligt exempel
+- Under 60: Osäker = markera som neutral
 
-**Acknowledging Valid Points:**
-Erkänna när motparten har rätt i något.
-Exempel: "Du har en poäng där, jag håller med om att..."
-Exempel: "Det är sant att X, men jag tänker annorlunda om Y"
+**"NEUTRAL" = VÄLDIGT SÄLLSYNT:**
+Neutral betyder: Saklig, objektiv information utan retoriska tricks.
+Exempel på neutral: "Statistiken visar att X", "Studien fann att Y"
+Det mesta i debatter är INTE neutralt.
 
-**Building On:**
-Utveckla motpartens idéer konstruktivt.
-Exempel: "Intressant perspektiv. Tänk om vi kombinerade din idé med..."
+ANALYSERA NU MEDDELANDET:
+Vad är den MEST TROLIGA tekniken? Var INTE försiktig - om det luktar strawmanning, säg strawmanning. Om det luktar loaded question, säg loaded question.
 
-=== INSTRUKTIONER ===
-
-VAR SÄRSKILT UPPMÄRKSAM PÅ:
-- Frågor som innehåller ej bevisade antaganden (jämför med Loaded Question-exemplen)
-- Feltolkningar av vad motparten faktiskt sa (jämför med Strawmanning-exemplen)
-- Förenklingar eller överdrifter av motpartens position
-- Försök att sätta ord i munnen på motparten
-
-CONFIDENCE-NIVÅER:
-- 85-100: Tydligt exempel på tekniken, mycket likt exemplen ovan
-- 70-84: Troligt exempel, men lite mer subtilt
-- 60-69: Möjligt exempel, viss osäkerhet
-- Under 60: För osäkert, markera som neutral
-
-Svara ENDAST med JSON:
+Svara ENDAST JSON:
 {
-  "technique": "exakt namn på tekniken från listan ovan",
+  "technique": "exakt namn på tekniken från listan",
   "category": "dirty_trick" eller "constructive" eller "neutral",
-  "confidence": 0-100,
-  "explanation": "konkret förklaring på svenska om VAD i meddelandet som matchar tekniken, referera gärna till liknande exempel"
+  "confidence": 60-100,
+  "explanation": "Konkret: VAD i meddelandet som matchar tekniken"
 }`
           }]
         })
