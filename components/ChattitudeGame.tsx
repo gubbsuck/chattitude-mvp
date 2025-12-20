@@ -17,10 +17,141 @@ const ChattitudeGame = () => {
     player1: { constructive: 0, destructive: 0 },
     player2: { constructive: 0, destructive: 0 }
   });
+  const [isDemo, setIsDemo] = useState(false);
+  const [demoIndex, setDemoIndex] = useState(0);
+
+  // Demo conversation data - Peterson vs Newman
+  const demoConversation = [
+    {
+      player: "Cathy",
+      text: "Du har sagt att män behöver växa upp och organisera sig. Hur hjälper det kvinnor?",
+      playerNum: 2
+    },
+    {
+      player: "Jordan",
+      text: "Jag säger att samhället fungerar bättre när människor tar ansvar. Det gäller alla.",
+      playerNum: 1
+    },
+    {
+      player: "Cathy",
+      text: "Men du pratar ju mest om män. Varför ska kvinnor acceptera ditt budskap?",
+      playerNum: 2
+    },
+    {
+      player: "Jordan",
+      text: "Jag säger inte att de ska 'acceptera' det. Jag säger att påståendet att lönegapet mellan män och kvinnor bara beror på kön är fel.",
+      playerNum: 1
+    },
+    {
+      player: "Cathy",
+      text: "Så du säger att kvinnor inte är diskriminerade på arbetsmarknaden?",
+      playerNum: 2
+    },
+    {
+      player: "Jordan",
+      text: "Nej, jag säger inte det. Det finns multipla faktorer. Utbildning, yrke, arbetade timmar, personlighet.",
+      playerNum: 1
+    },
+    {
+      player: "Cathy",
+      text: "Men resultatet är att kvinnor tjänar mindre. Det är fakta.",
+      playerNum: 2
+    },
+    {
+      player: "Jordan",
+      text: "Ja, men att säga att det ENBART beror på diskriminering är förenklat. Vi måste titta på alla variabler.",
+      playerNum: 1
+    },
+    {
+      player: "Cathy",
+      text: "Varför skulle kvinnor välja lägre betalda jobb om de har samma möjligheter?",
+      playerNum: 2
+    },
+    {
+      player: "Jordan",
+      text: "Det är en bra fråga. Forskning visar att i länder med mer jämställdhet blir skillnaderna i yrkesval större, inte mindre. Det kallas 'gender equality paradoxen'.",
+      playerNum: 1
+    },
+    {
+      player: "Cathy",
+      text: "Men är inte det bevis på att systemet är riggat?",
+      playerNum: 2
+    },
+    {
+      player: "Jordan",
+      text: "Eller så visar det att män och kvinnor i genomsnitt har olika intressen när de har frihet att välja. Det betyder inte att alla är likadana.",
+      playerNum: 1
+    }
+  ];
 
   const startDebate = () => {
     if (!player1Name.trim() || !player2Name.trim() || !thesis.trim()) return;
     setView('game');
+  };
+
+  const startDemo = async () => {
+    setIsDemo(true);
+    setPlayer1Name('Jordan');
+    setPlayer2Name('Cathy');
+    setThesis('Lönegapet mellan män och kvinnor beror primärt på könsdiskriminering');
+    setView('game');
+    setDemoIndex(0);
+    
+    // Start playing demo messages
+    playNextDemoMessage(0, []);
+  };
+
+  const playNextDemoMessage = async (index: number, currentMessages: any[]) => {
+    if (index >= demoConversation.length) {
+      setIsDemo(false);
+      return;
+    }
+
+    const demoMsg = demoConversation[index];
+    setAnalyzing(true);
+    
+    // Simulate thinking time
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    // Get context for AI
+    const context = currentMessages.length > 0 
+      ? currentMessages.slice(-2).map(m => `${m.player}: ${m.text}`).join('\n')
+      : 'Detta är det första meddelandet.';
+    
+    const analysis = await analyzeWithAI(demoMsg.text, context);
+    
+    const newMessage = {
+      player: demoMsg.player,
+      playerNum: demoMsg.playerNum,
+      text: demoMsg.text,
+      timestamp: new Date().toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' }),
+      analysis: analysis
+    };
+
+    // Update quality based on analysis
+    let newQuality = dialogQuality;
+    const playerKey = demoMsg.playerNum === 1 ? 'player1' : 'player2' as 'player1' | 'player2';
+    let newStats = { ...playerStats };
+    
+    if (analysis.category === 'dirty_trick' && analysis.confidence >= 75) {
+      newQuality = Math.max(0, dialogQuality - 10);
+      newStats[playerKey].destructive += 1;
+    } else if (analysis.category === 'constructive' && analysis.confidence >= 75) {
+      newQuality = Math.min(100, dialogQuality + 15);
+      newStats[playerKey].constructive += 1;
+    }
+
+    const updatedMessages = [...currentMessages, newMessage];
+    setMessages(updatedMessages);
+    setDialogQuality(newQuality);
+    setPlayerStats(newStats);
+    setAnalyzing(false);
+    setDemoIndex(index + 1);
+    
+    // Continue to next message after delay
+    setTimeout(() => {
+      playNextDemoMessage(index + 1, updatedMessages);
+    }, 2500);
   };
 
   const handleSendMessage = () => {
@@ -230,12 +361,26 @@ Svara ENDAST med JSON:
             </div>
           </div>
 
-          <button
-            onClick={() => setView('create')}
-            className="w-full bg-purple-600 text-white py-4 rounded-xl font-semibold hover:bg-purple-700 transition-colors"
-          >
-            Skapa Debatt
-          </button>
+          <div className="space-y-3">
+            <button
+              onClick={() => setView('create')}
+              className="w-full bg-purple-600 text-white py-4 rounded-xl font-semibold hover:bg-purple-700 transition-colors"
+            >
+              Skapa Debatt
+            </button>
+            
+            <button
+              onClick={startDemo}
+              className="w-full bg-blue-600 text-white py-4 rounded-xl font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+            >
+              <Sparkles className="w-5 h-5" />
+              Spela Demo: Peterson vs Newman
+            </button>
+            
+            <p className="text-center text-sm text-gray-500 mt-2">
+              Se AI:n analysera en riktig debatt i realtid
+            </p>
+          </div>
         </div>
       </div>
     );
@@ -423,49 +568,68 @@ Svara ENDAST med JSON:
           </div>
 
           <div className="border-t pt-6">
-            <div className="mb-3 text-sm font-semibold text-gray-600">
-              Nu är det <span className="text-purple-600">{currentPlayerName}s</span> tur
-            </div>
-            
-            {countdown !== null && (
-              <div className="mb-4 p-4 bg-yellow-50 rounded-xl border-2 border-yellow-200 text-center">
-                <p className="font-bold text-lg">Vänta ett ögonblick!</p>
-                <p className="text-gray-700 mb-2">Är du säker på detta?</p>
-                <div className="text-3xl font-bold text-yellow-600 mb-3">00:{countdown.toString().padStart(2, '0')}</div>
-                <div className="flex gap-3 justify-center">
-                  <button
-                    onClick={handleCancelAndEdit}
-                    className="bg-white text-gray-700 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors border-2 border-gray-300"
-                  >
-                    Avbryt & Redigera
-                  </button>
-                  <button
-                    onClick={handleSendNow}
-                    className="bg-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-purple-700 transition-colors"
-                  >
-                    Skicka Direkt
-                  </button>
+            {isDemo ? (
+              <div className="mb-4 p-4 bg-blue-50 rounded-xl border-2 border-blue-200 text-center">
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <Sparkles className="w-5 h-5 text-blue-600 animate-pulse" />
+                  <p className="font-bold text-lg text-blue-900">Demo Mode</p>
                 </div>
+                <p className="text-sm text-gray-700 mb-2">
+                  {demoIndex < demoConversation.length 
+                    ? `Meddelande ${demoIndex + 1} av ${demoConversation.length}`
+                    : 'Demo klar! Se hur AI:n identifierade dirty tricks ovan.'}
+                </p>
+                {analyzing && (
+                  <p className="text-xs text-gray-600">AI analyserar...</p>
+                )}
               </div>
+            ) : (
+              <>
+                <div className="mb-3 text-sm font-semibold text-gray-600">
+                  Nu är det <span className="text-purple-600">{currentPlayerName}s</span> tur
+                </div>
+                
+                {countdown !== null && (
+                  <div className="mb-4 p-4 bg-yellow-50 rounded-xl border-2 border-yellow-200 text-center">
+                    <p className="font-bold text-lg">Vänta ett ögonblick!</p>
+                    <p className="text-gray-700 mb-2">Är du säker på detta?</p>
+                    <div className="text-3xl font-bold text-yellow-600 mb-3">00:{countdown.toString().padStart(2, '0')}</div>
+                    <div className="flex gap-3 justify-center">
+                      <button
+                        onClick={handleCancelAndEdit}
+                        className="bg-white text-gray-700 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors border-2 border-gray-300"
+                      >
+                        Avbryt & Redigera
+                      </button>
+                      <button
+                        onClick={handleSendNow}
+                        className="bg-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-purple-700 transition-colors"
+                      >
+                        Skicka Direkt
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                <textarea
+                  value={currentInput}
+                  onChange={(e) => setCurrentInput(e.target.value)}
+                  placeholder="Skriv ditt meddelande..."
+                  disabled={countdown !== null}
+                  className="w-full p-3 border-2 border-gray-200 rounded-xl resize-none focus:outline-none focus:border-purple-400 disabled:bg-gray-50"
+                  rows={3}
+                />
+                
+                <button
+                  onClick={handleSendMessage}
+                  disabled={!currentInput.trim() || countdown !== null || analyzing}
+                  className="w-full mt-3 bg-purple-600 text-white py-3 rounded-xl font-semibold hover:bg-purple-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+                >
+                  {countdown !== null ? 'Reflekterar...' : analyzing ? 'Analyserar med AI...' : 'Skicka Meddelande'}
+                </button>
+              </>
             )}
-
-            <textarea
-              value={currentInput}
-              onChange={(e) => setCurrentInput(e.target.value)}
-              placeholder="Skriv ditt meddelande..."
-              disabled={countdown !== null}
-              className="w-full p-3 border-2 border-gray-200 rounded-xl resize-none focus:outline-none focus:border-purple-400 disabled:bg-gray-50"
-              rows={3}
-            />
             
-            <button
-              onClick={handleSendMessage}
-              disabled={!currentInput.trim() || countdown !== null || analyzing}
-              className="w-full mt-3 bg-purple-600 text-white py-3 rounded-xl font-semibold hover:bg-purple-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
-            >
-              {countdown !== null ? 'Reflekterar...' : analyzing ? 'Analyserar med AI...' : 'Skicka Meddelande'}
-            </button>
-
             <button
               onClick={() => setView('intro')}
               className="w-full mt-3 bg-orange-500 text-white py-3 rounded-xl font-semibold hover:bg-orange-600 transition-colors flex items-center justify-center gap-2"
