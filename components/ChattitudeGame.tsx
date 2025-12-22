@@ -19,6 +19,7 @@ const ChattitudeGame = () => {
   });
   const [isDemo, setIsDemo] = useState(false);
   const [demoIndex, setDemoIndex] = useState(0);
+  const [showTechniquesModal, setShowTechniquesModal] = useState(false);
 
   // Demo conversation data - Peterson vs Newman
   const demoConversation = [
@@ -284,6 +285,14 @@ const ChattitudeGame = () => {
               Spela Demo: Peterson vs Newman
             </button>
             
+            <button
+              onClick={() => setShowTechniquesModal(true)}
+              className="w-full bg-green-600 text-white py-3 rounded-xl font-semibold hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
+            >
+              <Info className="w-5 h-5" />
+              Lär dig om debatttekniker
+            </button>
+            
             <p className="text-center text-sm text-gray-500 mt-2">
               Se AI:n analysera en riktig debatt i realtid
             </p>
@@ -453,10 +462,22 @@ const ChattitudeGame = () => {
                     <div className={`mt-3 pt-3 border-t text-xs ${
                       msg.analysis.category === 'dirty_trick' ? 'border-red-200' : 'border-green-200'
                     }`}>
-                      <p className="font-semibold mb-1">
-                        {msg.analysis.technique}
-                        <span className="ml-1 opacity-75">({msg.analysis.confidence}%)</span>
-                      </p>
+                      <div className="flex items-start justify-between mb-1">
+                        <p className="font-semibold">
+                          {msg.analysis.technique}
+                          <span className="ml-1 opacity-75">({msg.analysis.confidence}%)</span>
+                        </p>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setShowTechniquesModal(true);
+                          }}
+                          className="text-blue-600 hover:text-blue-800 flex items-center gap-1"
+                        >
+                          <Info className="w-3 h-3" />
+                          <span className="text-xs">Lär dig mer</span>
+                        </button>
+                      </div>
                       <p className="text-gray-700">{msg.analysis.explanation}</p>
                     </div>
                   )}
@@ -542,6 +563,117 @@ const ChattitudeGame = () => {
             >
               <AlertCircle className="w-4 h-4" />
               Rapportera om AI:n gjorde fel
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // TECHNIQUES MODAL
+  if (showTechniquesModal) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
+        <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="sticky top-0 bg-white border-b p-6 flex items-center justify-between">
+            <h2 className="text-2xl font-bold text-gray-800">Debatttekniker</h2>
+            <button
+              onClick={() => setShowTechniquesModal(false)}
+              className="text-gray-500 hover:text-gray-700 text-2xl"
+            >
+              ×
+            </button>
+          </div>
+          
+          <div className="p-6 space-y-8">
+            {/* Destruktiva tekniker */}
+            <section>
+              <h3 className="text-xl font-bold text-red-600 mb-4">⚠️ Destruktiva tekniker</h3>
+              <p className="text-sm text-gray-600 mb-4">Dessa tekniker skadar konstruktiv dialog och bör undvikas.</p>
+              
+              <div className="space-y-4">
+                <div className="bg-red-50 p-4 rounded-lg">
+                  <h4 className="font-bold text-gray-800">Strawmanning</h4>
+                  <p className="text-sm text-gray-700 mt-1">Feltolka eller överdriva motpartens argument för att lättare attackera det.</p>
+                  <p className="text-xs text-gray-600 mt-2"><strong>Exempel:</strong> A: "Vi bör ha bättre kollektivtrafik" → B: "Så du vill förbjuda bilar?"</p>
+                </div>
+                
+                <div className="bg-red-50 p-4 rounded-lg">
+                  <h4 className="font-bold text-gray-800">Loaded Question</h4>
+                  <p className="text-sm text-gray-700 mt-1">Fråga med inbyggd, obevisad förutsättning.</p>
+                  <p className="text-xs text-gray-600 mt-2"><strong>Exempel:</strong> "Varför hatar du frihet?" (antar att personen gör det)</p>
+                </div>
+                
+                <div className="bg-red-50 p-4 rounded-lg">
+                  <h4 className="font-bold text-gray-800">Personal Attack (Ad Hominem)</h4>
+                  <p className="text-sm text-gray-700 mt-1">Attackera personen istället för argumentet.</p>
+                  <p className="text-xs text-gray-600 mt-2"><strong>Exempel:</strong> "Du är för ung för att förstå detta"</p>
+                </div>
+                
+                <div className="bg-red-50 p-4 rounded-lg">
+                  <h4 className="font-bold text-gray-800">Whataboutism</h4>
+                  <p className="text-sm text-gray-700 mt-1">Avleda genom att peka på annat problem.</p>
+                  <p className="text-xs text-gray-600 mt-2"><strong>Exempel:</strong> "Vad sägs om USA:s problem då?" (när man diskuterar annat)</p>
+                </div>
+                
+                <div className="bg-red-50 p-4 rounded-lg">
+                  <h4 className="font-bold text-gray-800">False Dilemma</h4>
+                  <p className="text-sm text-gray-700 mt-1">Presentera endast två alternativ när fler finns.</p>
+                  <p className="text-xs text-gray-600 mt-2"><strong>Exempel:</strong> "Antingen är du med oss eller mot oss"</p>
+                </div>
+              </div>
+            </section>
+
+            {/* Konstruktiva tekniker */}
+            <section>
+              <h3 className="text-xl font-bold text-green-600 mb-4">✨ Konstruktiva tekniker</h3>
+              <p className="text-sm text-gray-600 mb-4">Dessa tekniker bygger förståelse och konstruktiv dialog.</p>
+              
+              <div className="space-y-4">
+                <div className="bg-green-50 p-4 rounded-lg">
+                  <h4 className="font-bold text-gray-800">Steelmanning</h4>
+                  <p className="text-sm text-gray-700 mt-1">Presentera motpartens argument i sin STARKASTE form innan du svarar.</p>
+                  <p className="text-xs text-gray-600 mt-2"><strong>Exempel:</strong> "Om jag förstår dig rätt menar du [starkt formulerat], vilket är en viktig poäng..."</p>
+                </div>
+                
+                <div className="bg-green-50 p-4 rounded-lg">
+                  <h4 className="font-bold text-gray-800">Acknowledging Valid Points</h4>
+                  <p className="text-sm text-gray-700 mt-1">Erkänna när motparten har rätt i något.</p>
+                  <p className="text-xs text-gray-600 mt-2"><strong>Exempel:</strong> "Du har rätt i att X är ett problem. Samtidigt tänker jag att..."</p>
+                </div>
+                
+                <div className="bg-green-50 p-4 rounded-lg">
+                  <h4 className="font-bold text-gray-800">Seeking Genuine Clarification</h4>
+                  <p className="text-sm text-gray-700 mt-1">Ärligt fråga vad motparten menar - inte som fälla.</p>
+                  <p className="text-xs text-gray-600 mt-2"><strong>Exempel:</strong> "Kan du utveckla vad du menar med X? Jag vill förstå din tankegång"</p>
+                </div>
+                
+                <div className="bg-green-50 p-4 rounded-lg">
+                  <h4 className="font-bold text-gray-800">Finding Common Ground</h4>
+                  <p className="text-sm text-gray-700 mt-1">Identifiera områden där ni är överens.</p>
+                  <p className="text-xs text-gray-600 mt-2"><strong>Exempel:</strong> "Vi är båda överens om att problemet existerar, skillnaden är hur vi löser det"</p>
+                </div>
+              </div>
+            </section>
+
+            {/* Källor */}
+            <section className="border-t pt-6">
+              <h3 className="text-lg font-bold text-gray-800 mb-3">📚 Akademiska källor</h3>
+              <div className="space-y-2 text-sm text-gray-700">
+                <p><strong>Logiska felslut:</strong> Aristotle, "Sophistical Refutations" (~350 BCE); Irving Copi, "Introduction to Logic" (1953)</p>
+                <p><strong>Konstruktiv dialog:</strong> Carl Rogers, "On Becoming a Person" (1961); Marshall Rosenberg, "Nonviolent Communication" (1999)</p>
+                <p><strong>Steelmanning:</strong> Daniel Dennett, "Intuition Pumps and Other Tools for Thinking" (2013)</p>
+                <p><strong>Street Epistemology:</strong> Peter Boghossian, "A Manual for Creating Atheists" (2013)</p>
+              </div>
+            </section>
+          </div>
+          
+          <div className="sticky bottom-0 bg-gray-50 p-4 border-t">
+            <button
+              onClick={() => setShowTechniquesModal(false)}
+              className="w-full bg-purple-600 text-white py-3 rounded-xl font-semibold hover:bg-purple-700 transition-colors"
+            >
+              Stäng
             </button>
           </div>
         </div>

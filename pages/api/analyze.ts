@@ -63,48 +63,64 @@ Exempel: "Vad sägs om USA då?", "Ditt parti gjorde värre"
 
 === KONSTRUKTIVA TEKNIKER - LETA AKTIVT EFTER DESSA ===
 
-**Defensive Clarification (KONSTRUKTIV!):**
-Korrigera en FELTOLKNING av din position. Detta är INTE destruktivt - det är nödvändigt!
-Exempel 1: A: "Så du säger X?" → B: "Nej, jag säger inte X, jag säger Y"
-Exempel 2: A: "Varför vill du Z?" → B: "Jag säger inte att jag vill Z"
-→ Om någon KORRIGERAR en strawmanning eller loaded question = 80% Defensive Clarification (KONSTRUKTIV)
-
-**Seeking Genuine Clarification:**
-Ärligt fråga vad motparten menar (INTE som fälla).
-Exempel: "Kan du utveckla vad du menar med X?"
-→ 75% Seeking Clarification
-
-**Acknowledging Valid Points:**
-Erkänna när motparten har rätt i något.
-Exempel: "Du har en poäng där", "Det är sant att X"
-→ 80% Acknowledging
-
-**Steelmanning:**
-Presentera motpartens argument i sin starkaste form.
-Exempel: "Om jag förstår dig rätt säger du [starkt formulerat]"
-→ 85% Steelmanning
+**Defensive Clarification:**
+Korrigera en FELTOLKNING av din position.
+Exempel: A: "Så du säger X?" → B: "Nej, jag säger inte X, jag säger Y"
+→ Detta är NORMALT i debatt, inte extra konstruktivt = Neutral, 0 poäng
 
 **Providing Nuance:**
 Ge en nyanserad bild istället för svart/vitt.
 Exempel: "Det finns flera faktorer: A, B och C"
-→ 70% Providing Nuance (KONSTRUKTIVT)
+→ Detta är BRA men inte konstruktivt samtalsskapande = Neutral, 0 poäng
+
+=== KONSTRUKTIVA TEKNIKER - GER GRÖN RING & POÄNG ===
+
+**Steelmanning (MYCKET KONSTRUKTIVT):**
+Presentera motpartens argument i sin STARKASTE form innan du svarar.
+Exempel: "Om jag förstår dig rätt menar du [starkt formulerat], vilket är en viktig poäng. Dock tänker jag att..."
+→ 85%+ confidence = Steelmanning, +15 poäng
+
+**Acknowledging Valid Points (KONSTRUKTIVT):**
+Erkänna när motparten har rätt i något INNAN du säger din grej.
+Exempel: "Du har rätt i att X är ett problem. Samtidigt..."
+Exempel: "Det är sant att Y. Men..."
+→ 80%+ confidence = Acknowledging, +10 poäng
+
+**Seeking Genuine Clarification (KONSTRUKTIVT):**
+Ärligt fråga vad motparten menar - INTE som fälla eller gotcha.
+Exempel: "Kan du utveckla vad du menar med X?"
+Exempel: "Jag är osäker på hur du tänker här, hjälp mig förstå"
+→ 75%+ confidence = Seeking Clarification, +10 poäng
+
+**Finding Common Ground (KONSTRUKTIVT):**
+Aktivt identifiera var ni är ÖVERENS.
+Exempel: "Vi är båda överens om att [problem] existerar, skillnaden är hur vi löser det"
+→ 80%+ confidence = Finding Common Ground, +12 poäng
 
 === BEDÖMNINGSREGLER ===
 
+**KATEGORISERING:**
+- **dirty_trick** = Destruktiva tekniker som skadar dialog
+- **constructive** = ENDAST tekniker som AKTIVT bygger konstruktiv dialog (Steelmanning, Acknowledging, etc.)
+- **neutral** = Allt annat (normala svar, defensiv klarifiering, basic nyansering)
+
 **KONTEXT ÄR VIKTIGT:**
-- Om motparten använde strawmanning och personen korrigerar = KONSTRUKTIV
-- Om motparten ställde loaded question och personen avvisar premissen = KONSTRUKTIV
-- Försvar mot dirty tricks är INTE i sig destruktivt!
+- Om motparten använde strawmanning och personen korrigerar = NEUTRAL (inte konstruktiv, bara nödvändigt)
+- Om motparten ställde loaded question och personen avvisar premissen = NEUTRAL
+- Försvar mot dirty tricks är INTE i sig konstruktivt - det är normalt!
 
-**GE HÖG CONFIDENCE:**
-- 90-100: Tydligt textbook-exempel
-- 75-89: Klart exempel på tekniken
-- 60-74: Troligt exempel
-- Under 60: Osäker = markera som neutral
+**GE HÖG CONFIDENCE FÖR KONSTRUKTIVA:**
+Konstruktiva tekniker ska ha HÖG confidence för att ge poäng:
+- Steelmanning: 85%+ 
+- Acknowledging: 80%+
+- Seeking Clarification: 75%+
+- Finding Common Ground: 80%+
 
-**VAR GENERÖS MED KONSTRUKTIVA:**
-Om någon GÖR ETT FÖRSÖK att vara konstruktiv, ge dem credit!
-Om någon klarifierar, nyanserar, eller erkänner något - markera det!
+**VAR STRIKT MED VAD SOM ÄR "KONSTRUKTIVT":**
+Det ska vara något EXTRA - inte bara normalt debattsvar!
+- "Nej, jag säger inte det" = Neutral (försvar)
+- "Det finns flera faktorer" = Neutral (basic nyansering)
+- "Du har rätt i X, men jag tänker Y" = Konstruktiv! (acknowledging)
 
 **"NEUTRAL" = SÄLLSYNT:**
 Neutral betyder: Ren saklig information utan retoriska tricks och utan konstruktiva metoder.
