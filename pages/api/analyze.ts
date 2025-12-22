@@ -27,7 +27,7 @@ export default async function handler(
         max_tokens: 1000,
         messages: [{
           role: "user",
-          content: `Du är en STRIKT debattdomare. Din uppgift är att AKTIVT leta efter destruktiva debatttekniker. Var INTE generös - markera problem när de finns.
+          content: `Du är en STRIKT debattdomare. Din uppgift är att AKTIVT leta efter destruktiva debatttekniker OCH konstruktiva metoder. Var INTE generös med dirty tricks - markera problem när de finns. Men var GENERÖS med att identifiera konstruktiva försök!
 
 KONTEXT: ${context || 'Detta är det första meddelandet.'}
 
@@ -42,46 +42,59 @@ Feltolka eller överdriva motpartens argument.
 Nyckelord att leta efter: "Så du säger/menar att...", "Alltså vill du...", "Med andra ord..."
 Exempel 1: A: "Vi bör ha strängare gränskontroller" → B: "Så du vill stänga alla gränser helt?"
 Exempel 2: A: "Lönegap har flera orsaker" → B: "Så du säger att kvinnor inte är diskriminerade?"
-Exempel 3: A: "Polisen behöver mer utbildning" → B: "Alltså är alla poliser inkompetenta?"
-→ Om någon säger "Så du säger..." utan att motparten SA det = 90% Strawmanning
+→ Om någon säger "Så du säger..." utan att motparten SA det = 85% Strawmanning
 
 **Loaded Question (MYCKET VANLIG):**
 Fråga med inbyggd, obevisad förutsättning.
 Nyckelord: "Varför...", "Hur kan du...", frågor som antar något
 Exempel 1: "Varför ska kvinnor acceptera X?" (antar att talaren sagt att de ska)
 Exempel 2: "Hur kan du försvara Y?" (antar att personen försvarar det)
-Exempel 3: "Varför hatar du frihet?" (antar hat)
 → Om frågan innehåller ett antagande motparten INTE gjort = 85% Loaded Question
 
 **Personal Attack:**
 Attackera personen, inte argumentet.
 Exempel: "Du är privilegierad", "Vad vet du", "Givetvis tycker DU så"
+→ 80% Personal Attack
 
 **Whataboutism:**
 Peka på annat problem istället för att svara.
 Exempel: "Vad sägs om USA då?", "Ditt parti gjorde värre"
+→ 75% Whataboutism
 
-**False Dilemma:**
-Bara två alternativ när fler finns.
-Exempel: "Antingen frihet ELLER säkerhet"
+=== KONSTRUKTIVA TEKNIKER - LETA AKTIVT EFTER DESSA ===
 
-=== KONSTRUKTIVA TEKNIKER ===
+**Defensive Clarification (KONSTRUKTIV!):**
+Korrigera en FELTOLKNING av din position. Detta är INTE destruktivt - det är nödvändigt!
+Exempel 1: A: "Så du säger X?" → B: "Nej, jag säger inte X, jag säger Y"
+Exempel 2: A: "Varför vill du Z?" → B: "Jag säger inte att jag vill Z"
+→ Om någon KORRIGERAR en strawmanning eller loaded question = 80% Defensive Clarification (KONSTRUKTIV)
 
-**Seeking Clarification:**
-Exempel: "Kan du utveckla vad du menar?"
+**Seeking Genuine Clarification:**
+Ärligt fråga vad motparten menar (INTE som fälla).
+Exempel: "Kan du utveckla vad du menar med X?"
+→ 75% Seeking Clarification
 
-**Acknowledging:**
-Exempel: "Du har en poäng", "Det är sant att..."
+**Acknowledging Valid Points:**
+Erkänna när motparten har rätt i något.
+Exempel: "Du har en poäng där", "Det är sant att X"
+→ 80% Acknowledging
 
 **Steelmanning:**
+Presentera motpartens argument i sin starkaste form.
 Exempel: "Om jag förstår dig rätt säger du [starkt formulerat]"
+→ 85% Steelmanning
+
+**Providing Nuance:**
+Ge en nyanserad bild istället för svart/vitt.
+Exempel: "Det finns flera faktorer: A, B och C"
+→ 70% Providing Nuance (KONSTRUKTIVT)
 
 === BEDÖMNINGSREGLER ===
 
-**STRIKT BEDÖMNING:**
-- Om meddelandet FELTOLKAR motparten = minst 70% Strawmanning
-- Om frågan ANTAR något obevisat = minst 75% Loaded Question
-- Om svaret UNDVIKER frågan = minst 60% Evasion
+**KONTEXT ÄR VIKTIGT:**
+- Om motparten använde strawmanning och personen korrigerar = KONSTRUKTIV
+- Om motparten ställde loaded question och personen avvisar premissen = KONSTRUKTIV
+- Försvar mot dirty tricks är INTE i sig destruktivt!
 
 **GE HÖG CONFIDENCE:**
 - 90-100: Tydligt textbook-exempel
@@ -89,13 +102,17 @@ Exempel: "Om jag förstår dig rätt säger du [starkt formulerat]"
 - 60-74: Troligt exempel
 - Under 60: Osäker = markera som neutral
 
-**"NEUTRAL" = VÄLDIGT SÄLLSYNT:**
-Neutral betyder: Saklig, objektiv information utan retoriska tricks.
-Exempel på neutral: "Statistiken visar att X", "Studien fann att Y"
-Det mesta i debatter är INTE neutralt.
+**VAR GENERÖS MED KONSTRUKTIVA:**
+Om någon GÖR ETT FÖRSÖK att vara konstruktiv, ge dem credit!
+Om någon klarifierar, nyanserar, eller erkänner något - markera det!
+
+**"NEUTRAL" = SÄLLSYNT:**
+Neutral betyder: Ren saklig information utan retoriska tricks och utan konstruktiva metoder.
+Exempel: "Statistiken visar att X"
 
 ANALYSERA NU MEDDELANDET:
-Vad är den MEST TROLIGA tekniken? Var INTE försiktig - om det luktar strawmanning, säg strawmanning. Om det luktar loaded question, säg loaded question.
+Leta efter BÅDE destruktiva OCH konstruktiva tekniker.
+Var strikt med dirty tricks, generös med konstruktiva metoder.
 
 Svara ENDAST JSON:
 {

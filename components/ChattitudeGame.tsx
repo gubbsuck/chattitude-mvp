@@ -259,6 +259,13 @@ const ChattitudeGame = () => {
               <h2 className="font-bold text-lg mb-2">Varför Chattitude?</h2>
               <p className="text-gray-700">AI coachar er i realtid att föra konstruktiva diskussioner.</p>
             </div>
+            
+            <div className="bg-yellow-50 p-4 rounded-xl border-2 border-yellow-200">
+              <p className="text-sm font-semibold mb-2">⚠️ BETA-version:</p>
+              <p className="text-sm text-gray-700">
+                AI:n lär sig fortfarande och kan göra fel. Hjälp oss förbättra genom att rapportera konstigheter!
+              </p>
+            </div>
           </div>
 
           <div className="space-y-3">
@@ -339,15 +346,6 @@ const ChattitudeGame = () => {
                 className="w-full p-3 border-2 border-gray-200 rounded-lg resize-none focus:outline-none focus:border-green-400"
                 rows={3}
               />
-            </div>
-
-            <div className="bg-yellow-50 p-4 rounded-xl border-2 border-yellow-200">
-              <p className="text-sm font-semibold mb-2">💡 Tips:</p>
-              <ul className="text-sm text-gray-700 space-y-1">
-                <li>• Rekommenderad tid: 10-15 minuter</li>
-                <li>• Ca 5-7 repliker vardera</li>
-                <li>• Avsluta när ni känner er klara</li>
-              </ul>
             </div>
           </div>
 
@@ -536,6 +534,14 @@ const ChattitudeGame = () => {
             >
               <MessageCircle className="w-4 h-4" />
               Ditt sista ord
+            </button>
+            
+            <button
+              onClick={() => window.open('https://forms.gle/chattitude-feedback', '_blank')}
+              className="w-full mt-2 bg-gray-100 text-gray-700 py-2 rounded-xl text-sm font-medium hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
+            >
+              <AlertCircle className="w-4 h-4" />
+              Rapportera om AI:n gjorde fel
             </button>
           </div>
         </div>
