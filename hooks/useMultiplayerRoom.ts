@@ -1,4 +1,3 @@
-// hooks/useMultiplayerRoom.ts
 import { useEffect, useState } from 'react';
 import { database } from '../lib/firebase';
 import { ref, push, onValue, set, off, update } from 'firebase/database';
@@ -79,7 +78,6 @@ export const useMultiplayerRoom = (roomId: string | null) => {
   ) => {
     const roomRef = ref(database, `rooms/${roomId}`);
     
-    // Get current room data first
     const snapshot = await new Promise<any>((resolve) => {
       onValue(roomRef, (snap) => {
         resolve(snap.val());
@@ -94,7 +92,6 @@ export const useMultiplayerRoom = (roomId: string | null) => {
     };
     const currentQuality = currentData.dialogQuality || 100;
 
-    // Create new message
     const newMessage = {
       player: playerName,
       playerNum,
@@ -103,7 +100,6 @@ export const useMultiplayerRoom = (roomId: string | null) => {
       analysis,
     };
 
-    // Update stats and quality
     let newQuality = currentQuality;
     const playerKey = playerNum === 1 ? 'player1' : 'player2';
     let newStats = { ...currentStats };
@@ -116,10 +112,8 @@ export const useMultiplayerRoom = (roomId: string | null) => {
       newStats[playerKey].constructive += 1;
     }
 
-    // Switch turn
     const nextPlayer = playerNum === 1 ? 2 : 1;
 
-    // Update room
     await update(roomRef, {
       messages: [...currentMessages, newMessage],
       dialogQuality: newQuality,
