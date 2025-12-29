@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MessageCircle, AlertCircle, CheckCircle, Info, Users, Sparkles, Trophy } from 'lucide-react';
+import { useMultiplayerRoom } from '../hooks/useMultiplayerRoom';
+import { useRouter } from 'next/router';
 
 const ChattitudeGame = () => {
   const [view, setView] = useState('intro');
@@ -20,6 +22,11 @@ const ChattitudeGame = () => {
   const [isDemo, setIsDemo] = useState(false);
   const [demoIndex, setDemoIndex] = useState(0);
   const [showTechniquesModal, setShowTechniquesModal] = useState(false);
+
+  // Multiplayer state
+  const [isMultiplayer, setIsMultiplayer] = useState(false);
+  const [roomIdInput, setRoomIdInput] = useState('');
+  const { roomData, isConnected, createRoom, joinRoom, sendMessage } = useMultiplayerRoom(roomIdInput || null);
 
   // Demo conversation data - Peterson vs Newman
   const demoConversation = [
@@ -83,7 +90,35 @@ const ChattitudeGame = () => {
       text: "Eller så visar det att män och kvinnor i genomsnitt har olika intressen när de har frihet att välja. Det betyder inte att alla är likadana.",
       playerNum: 1
     }
-  ];
+ ];
+
+  // Check URL for room ID on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const roomId = urlParams.get('room');
+      if (roomId) {
+        setRoomIdInput(roomId);
+        setIsMultiplayer(true);
+        setView('join');
+      }
+    }
+  }, []);
+
+  // Sync room data to local state
+  useEffect(() => {
+    if (roomData && isMultiplayer) {
+      setMessages(roomData.messages || []);
+      setDialogQuality(roomData.dialogQuality);
+      setPlayerStats(roomData.playerStats);
+      setCurrentPlayer(roomData.currentPlayer);
+      setThesis(roomData.thesis);
+      setPlayer1Name(roomData.player1Name);
+      if (roomData.player2Name) {
+        setPlayer2Name(roomData.player2Name);
+      }
+    }
+  }, [roomData, isMultiplayer]);
 
   const startDebate = () => {
     if (!player1Name.trim() || !player2Name.trim() || !thesis.trim()) return;
@@ -97,7 +132,60 @@ const ChattitudeGame = () => {
     setThesis('Lönegapet mellan män och kvinnor beror primärt på könsdiskriminering');
     setView('game');
     setDemoIndex(0);
-    
+    };
+
+const startMultiplayer = () => {
+  setIsMultiplayer(true);
+  setView('create');
+};
+
+const createMultiplayerRoom = async () => {
+  if (!player1Name.trim() || !thesis.trim()) return;
+  
+  const newRoomId = await createRoom(thesis, player1Name);
+  setRoomIdInput(newRoomId);
+  
+  // Generate shareable link
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+  const link = `${baseUrl}/?room=${newRoomId}`;
+  
+  setView('waiting');
+  
+  // Copy to clipboard
+  if (typeof navigator !== 'undefined' && navigator.clipboard) {
+    await navigator.clipboard.writeText(link);
+  }
+};
+
+const joinMultiplayerRoom = async () => {
+  if (!player2Name.trim() || !roomIdInput) return;
+  
+  await joinRoom(roomIdInput, player2Name);
+  setView('game');
+};
+
+const handleMultiplayerMessage = async () => {
+  if (!currentInput.trim() || analyzing || !roomIdInput) return;
+  
+  setAnalyzing(true);
+  
+  const context = messages.length > 0
+    ? messages.slice(-2).map(m => `${m.player}: ${m.text}`).join('\n')
+    : 'Detta är det första meddelandet.';
+  
+  const analysis = await analyzeWithAI(currentInput, context);
+  
+  const playerNum = player1Name === roomData?.player1Name ? 1 : 2;
+  const playerName = playerNum === 1 ? player1Name : player2Name;
+  
+  await sendMessage(roomIdInput, playerNum, playerName, currentInput, analysis);
+  
+  setCurrentInput('');
+  setAnalyzing(false);
+};
+
+const playNextDemoMessage = async (index: number, currentMessages: any[]) => {
+
     // Start playing demo messages
     playNextDemoMessage(0, []);
   };
@@ -399,7 +487,18 @@ const ChattitudeGame = () => {
               <Sparkles className="w-5 h-5" />
               Spela Demo: Peterson vs Newman
             </button>
+            </button>
             
+            <button
+              onClick={startMultiplayer}
+              className="w-full bg-indigo-600 text-white py-4 rounded-xl font-semibold hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2"
+            >
+              <Users className="w-5 h-5" />
+              Skapa Multiplayer-debatt
+            </button>
+
+            <button
+onClick={() => setShowTechniquesModal(true)}>
             <button
               onClick={() => setShowTechniquesModal(true)}
               className="w-full bg-green-600 text-white py-3 rounded-xl font-semibold hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
@@ -477,11 +576,11 @@ const ChattitudeGame = () => {
           </div>
 
           <button
-            onClick={startDebate}
+onClick={isMultiplayer ? createMultiplayerRoom : startDebate}
             disabled={!player1Name.trim() || !player2Name.trim() || !thesis.trim()}
             className="w-full bg-purple-600 text-white py-4 rounded-xl font-semibold hover:bg-purple-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
           >
-            Starta Debatt
+            {isMultiplayer ? 'Skapa Rum & Kopiera Länk' : 'Starta Debatt'}
           </button>
 
           <button
@@ -495,10 +594,106 @@ const ChattitudeGame = () => {
       </>
     );
   }
+// WAITING VIEW (waiting for player 2)
+  if (view === 'waiting' && isMultiplayer) {
+    const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+    const shareLink = `${baseUrl}/?room=${roomIdInput}`;
+    
+    return (
+      <>
+        {renderTechniquesModal()}
+        <div className="max-w-2xl mx-auto p-6 bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
+          <div className="bg-white rounded-2xl shadow-xl p-8">
+            <div className="text-center mb-8">
+              <Users className="w-16 h-16 mx-auto mb-4 text-indigo-600 animate-pulse" />
+              <h1 className="text-2xl font-bold text-gray-800 mb-2">Väntar på motdebattör...</h1>
+              <p className="text-gray-600">Dela länken nedan med den du vill debattera!</p>
+            </div>
+
+            <div className="bg-indigo-50 p-6 rounded-xl mb-6">
+              <p className="text-sm font-semibold mb-2">📋 Delbar länk (kopierad!):</p>
+              <div className="bg-white p-3 rounded-lg border-2 border-indigo-200 break-all text-sm">
+                {shareLink}
+              </div>
+            </div>
+
+            <div className="bg-yellow-50 p-4 rounded-xl border-2 border-yellow-200 mb-6">
+              <p className="text-sm"><strong>💡 Tips:</strong> Skicka länken via WhatsApp, SMS eller mejl till din motdebattör!</p>
+            </div>
+
+            {roomData?.player2Name && (
+              <div className="bg-green-50 p-4 rounded-xl border-2 border-green-200 mb-4">
+                <p className="text-sm font-semibold text-green-800">
+                  ✅ {roomData.player2Name} har gått med! Startar snart...
+                </p>
+              </div>
+            )}
+
+            <button
+              onClick={() => setView('intro')}
+              className="w-full bg-gray-100 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
+            >
+              Avbryt
+            </button>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  // JOIN VIEW (player 2 joining)
+  if (view === 'join' && isMultiplayer) {
+    return (
+      <>
+        {renderTechniquesModal()}
+        <div className="max-w-2xl mx-auto p-6 bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
+          <div className="bg-white rounded-2xl shadow-xl p-8">
+            <div className="text-center mb-8">
+              <Users className="w-16 h-16 mx-auto mb-4 text-indigo-600" />
+              <h1 className="text-2xl font-bold text-gray-800 mb-2">Gå med i debatten!</h1>
+              {roomData && (
+                <>
+                  <p className="text-gray-600 mb-4">Du bjuds in av <strong>{roomData.player1Name}</strong></p>
+                  <div className="bg-purple-50 p-4 rounded-xl">
+                    <p className="text-sm font-semibold mb-1">📝 Tes:</p>
+                    <p className="text-gray-700">{roomData.thesis}</p>
+                  </div>
+                </>
+              )}
+            </div>
+
+            <div className="space-y-4 mb-6">
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700">Ditt namn:</label>
+                <input
+                  type="text"
+                  value={player2Name}
+                  onChange={(e) => setPlayer2Name(e.target.value)}
+                  placeholder="T.ex. Anna"
+                  className="w-full p-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-purple-400"
+                />
+              </div>
+            </div>
+
+            <button
+              onClick={joinMultiplayerRoom}
+              disabled={!player2Name.trim()}
+              className="w-full bg-indigo-600 text-white py-4 rounded-xl font-semibold hover:bg-indigo-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+            >
+              Gå med i debatten
+            </button>
+          </div>
+        </div>
+      </>
+    );
+  }
 
   // GAME VIEW
   if (view === 'game') {
     const currentPlayerName = currentPlayer === 1 ? player1Name : player2Name;
+const isMyTurn = isMultiplayer 
+  ? currentPlayer === (player1Name === roomData?.player1Name ? 1 : 2)
+  : true;
     
     return (
       <>
@@ -625,9 +820,13 @@ const ChattitudeGame = () => {
               </div>
             ) : (
               <>
-                <div className="mb-3 text-sm font-semibold text-gray-600">
-                  Nu är det <span className="text-purple-600">{currentPlayerName}s</span> tur
-                </div>
+               <div className="mb-3 text-sm font-semibold text-gray-600">
+  {isMultiplayer && !isMyTurn ? (
+    <span className="text-orange-600">Väntar på {currentPlayerName}...</span>
+  ) : (
+    <>Nu är det <span className="text-purple-600">{currentPlayerName}s</span> tur</>
+  )}
+</div>
                 
                 {countdown !== null && (
                   <div className="mb-4 p-4 bg-yellow-50 rounded-xl border-2 border-yellow-200 text-center">
@@ -661,8 +860,8 @@ const ChattitudeGame = () => {
                 />
                 
                 <button
-                  onClick={handleSendMessage}
-                  disabled={!currentInput.trim() || countdown !== null || analyzing}
+                  onClick={isMultiplayer ? handleMultiplayerMessage : handleSendMessage}
+disabled={!currentInput.trim() || countdown !== null || analyzing || (isMultiplayer && !isMyTurn)}
                   className="w-full mt-3 bg-purple-600 text-white py-3 rounded-xl font-semibold hover:bg-purple-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
                 >
                   {countdown !== null ? 'Reflekterar...' : analyzing ? 'Analyserar med AI...' : 'Skicka Meddelande'}
