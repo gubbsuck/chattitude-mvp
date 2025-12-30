@@ -481,7 +481,6 @@ const handleMultiplayerMessage = async () => {
               <Sparkles className="w-5 h-5" />
               Spela Demo: Peterson vs Newman
             </button>
-            </button>
             
             <button
               onClick={startMultiplayer}
