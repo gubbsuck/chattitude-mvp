@@ -26,7 +26,7 @@ const ChattitudeGame = () => {
   // Multiplayer state
   const [isMultiplayer, setIsMultiplayer] = useState(false);
   const [roomIdInput, setRoomIdInput] = useState('');
-  const { roomData, isConnected, createRoom, joinRoom, sendMessage } = useMultiplayerRoom(roomIdInput || null);
+  const { roomData, isConnected, createRoom, joinRoom, sendMessage: sendMultiplayerMessage } = useMultiplayerRoom(roomIdInput || null);
 
   // Demo conversation data - Peterson vs Newman
   const demoConversation = [
@@ -178,7 +178,7 @@ const handleMultiplayerMessage = async () => {
   const playerNum = player1Name === roomData?.player1Name ? 1 : 2;
   const playerName = playerNum === 1 ? player1Name : player2Name;
   
-  await sendMessage(roomIdInput, playerNum, playerName, currentInput, analysis);
+ await sendMultiplayerMessage(roomIdInput, playerNum, playerName, currentInput, analysis);
   
   setCurrentInput('');
   setAnalyzing(false);
