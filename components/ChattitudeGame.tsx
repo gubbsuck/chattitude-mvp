@@ -184,12 +184,6 @@ const handleMultiplayerMessage = async () => {
   setAnalyzing(false);
 };
 
-const playNextDemoMessage = async (index: number, currentMessages: any[]) => {
-
-    // Start playing demo messages
-    playNextDemoMessage(0, []);
-  };
-
   const playNextDemoMessage = async (index: number, currentMessages: any[]) => {
     if (index >= demoConversation.length) {
       setIsDemo(false);
