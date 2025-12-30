@@ -66,6 +66,9 @@ const ChattitudeGame = () => {
       if (roomData.player2Name) {
         setPlayer2Name(roomData.player2Name);
       }
+    }// Auto-start game when both players are ready
+    if (roomData.player2Name && (view === 'waiting' || view === 'join')) {
+      setView('game');
     }
   }, [roomData, isMultiplayer]);
 
