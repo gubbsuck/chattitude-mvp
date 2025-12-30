@@ -473,9 +473,11 @@ const ChattitudeGame = () => {
   if (view === 'game') {
     const currentPlayerName = currentPlayer === 1 ? player1Name : player2Name;
     const isMyTurn = isMultiplayer 
-  ? (roomData?.player2Name && player2Name === roomData.player2Name 
+  ? (player2Name && player2Name === roomData?.player2Name 
       ? currentPlayer === 2 
-      : currentPlayer === 1)
+      : player1Name === roomData?.player1Name 
+        ? currentPlayer === 1
+        : true)
   : true;
     return (
       <>
