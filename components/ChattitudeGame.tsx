@@ -492,7 +492,6 @@ const handleMultiplayerMessage = async () => {
 
             <button
 onClick={() => setShowTechniquesModal(true)}>
-            <button
               onClick={() => setShowTechniquesModal(true)}
               className="w-full bg-green-600 text-white py-3 rounded-xl font-semibold hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
             >
