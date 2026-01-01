@@ -66,10 +66,12 @@ const ChattitudeGame = () => {
       if (roomData.player2Name) {
         setPlayer2Name(roomData.player2Name);
       }
-    }// Auto-start game when both players are ready
-  if (roomData?.player2Name && (view === 'waiting' || view === 'join')) {
-  setView('game');
-}
+      
+      // Auto-start game when both players are ready
+      if (roomData?.player2Name && (view === 'waiting' || view === 'join')) {
+        setView('game');
+      }
+    }
   }, [roomData, isMultiplayer]);
 
   const startDebate = () => {
@@ -96,6 +98,7 @@ const ChattitudeGame = () => {
     if (!player1Name.trim() || !thesis.trim()) return;
     const newRoomId = await createRoom(thesis, player1Name);
     setRoomIdInput(newRoomId);
+    localStorage.setItem('myPlayerNumber', '1');
     const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
     const link = `${baseUrl}/?room=${newRoomId}`;
     setView('waiting');
@@ -107,6 +110,7 @@ const ChattitudeGame = () => {
   const joinMultiplayerRoom = async () => {
     if (!player2Name.trim() || !roomIdInput) return;
     await joinRoom(roomIdInput, player2Name);
+    localStorage.setItem('myPlayerNumber', '2');
     setView('game');
   };
 
@@ -115,7 +119,7 @@ const ChattitudeGame = () => {
     setAnalyzing(true);
     const context = messages.length > 0 ? messages.slice(-2).map(m => `${m.player}: ${m.text}`).join('\n') : 'Detta är det första meddelandet.';
     const analysis = await analyzeWithAI(currentInput, context);
-    const playerNum = player1Name === roomData?.player1Name ? 1 : 2;
+    const playerNum = parseInt(localStorage.getItem('myPlayerNumber') || '1');
     const playerName = playerNum === 1 ? player1Name : player2Name;
     await sendMultiplayerMessage(roomIdInput, playerNum, playerName, currentInput, analysis);
     setCurrentInput('');
@@ -472,13 +476,9 @@ const ChattitudeGame = () => {
 
   if (view === 'game') {
     const currentPlayerName = currentPlayer === 1 ? player1Name : player2Name;
-    const isMyTurn = isMultiplayer 
-  ? (player2Name && player2Name === roomData?.player2Name 
-      ? currentPlayer === 2 
-      : player1Name === roomData?.player1Name 
-        ? currentPlayer === 1
-        : true)
-  : true;
+    const myPlayerNumber = parseInt(localStorage.getItem('myPlayerNumber') || '1');
+    const isMyTurn = isMultiplayer ? currentPlayer === myPlayerNumber : true;
+    
     return (
       <>
         {renderTechniquesModal()}
