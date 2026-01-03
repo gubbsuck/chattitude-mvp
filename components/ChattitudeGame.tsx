@@ -29,18 +29,18 @@ const ChattitudeGame = () => {
 
   // Demo conversation data
   const demoConversation = [
-    { player: "Cathy", text: "Du har sagt att män behöver växa upp och organisera sig. Hur hjälper det kvinnor?", playerNum: 2 },
-    { player: "Jordan", text: "Jag säger att samhället fungerar bättre när människor tar ansvar. Det gäller alla.", playerNum: 1 },
-    { player: "Cathy", text: "Men du pratar ju mest om män. Varför ska kvinnor acceptera ditt budskap?", playerNum: 2 },
-    { player: "Jordan", text: "Jag säger inte att de ska 'acceptera' det. Jag säger att påståendet att lönegapet mellan män och kvinnor bara beror på kön är fel.", playerNum: 1 },
-    { player: "Cathy", text: "Så du säger att kvinnor inte är diskriminerade på arbetsmarknaden?", playerNum: 2 },
-    { player: "Jordan", text: "Nej, jag säger inte det. Det finns multipla faktorer. Utbildning, yrke, arbetade timmar, personlighet.", playerNum: 1 },
-    { player: "Cathy", text: "Men resultatet är att kvinnor tjänar mindre. Det är fakta.", playerNum: 2 },
-    { player: "Jordan", text: "Ja, men att säga att det ENBART beror på diskriminering är förenklat. Vi måste titta på alla variabler.", playerNum: 1 },
-    { player: "Cathy", text: "Varför skulle kvinnor välja lägre betalda jobb om de har samma möjligheter?", playerNum: 2 },
-    { player: "Jordan", text: "Det är en bra fråga. Forskning visar att i länder med mer jämställdhet blir skillnaderna i yrkesval större, inte mindre. Det kallas 'gender equality paradoxen'.", playerNum: 1 },
-    { player: "Cathy", text: "Men är inte det bevis på att systemet är riggat?", playerNum: 2 },
-    { player: "Jordan", text: "Eller så visar det att män och kvinnor i genomsnitt har olika intressen när de har frihet att välja. Det betyder inte att alla är likadana.", playerNum: 1 }
+    { player: "Cathy", text: "You've said men need to sort themselves out and organize. How does that help women?", playerNum: 2 },
+    { player: "Jordan", text: "I'm saying society works better when people take responsibility. That applies to everyone.", playerNum: 1 },
+    { player: "Cathy", text: "But you mostly talk about men. Why should women accept your message?", playerNum: 2 },
+    { player: "Jordan", text: "I'm not saying they should 'accept' it. I'm saying the claim that the gender pay gap is solely due to gender is wrong.", playerNum: 1 },
+    { player: "Cathy", text: "So you're saying women aren't discriminated against in the workplace?", playerNum: 2 },
+    { player: "Jordan", text: "No, I'm not saying that. There are multiple factors. Education, occupation, hours worked, personality.", playerNum: 1 },
+    { player: "Cathy", text: "But the outcome is that women earn less. That's a fact.", playerNum: 2 },
+    { player: "Jordan", text: "Yes, but saying it's ONLY due to discrimination is oversimplified. We need to look at all variables.", playerNum: 1 },
+    { player: "Cathy", text: "Why would women choose lower-paid jobs if they have the same opportunities?", playerNum: 2 },
+    { player: "Jordan", text: "That's a good question. Research shows that in countries with more gender equality, differences in career choices become larger, not smaller. It's called the 'gender equality paradox'.", playerNum: 1 },
+    { player: "Cathy", text: "But isn't that proof the system is rigged?", playerNum: 2 },
+    { player: "Jordan", text: "Or it shows that men and women on average have different interests when they have freedom to choose. That doesn't mean everyone is the same.", playerNum: 1 }
   ];
 
   useEffect(() => {
@@ -74,16 +74,11 @@ const ChattitudeGame = () => {
     }
   }, [roomData, isMultiplayer]);
 
-  const startDebate = () => {
-    if (!player1Name.trim() || !player2Name.trim() || !thesis.trim()) return;
-    setView('game');
-  };
-
   const startDemo = async () => {
     setIsDemo(true);
     setPlayer1Name('Jordan');
     setPlayer2Name('Cathy');
-    setThesis('Lönegapet mellan män och kvinnor beror primärt på könsdiskriminering');
+    setThesis('The gender pay gap is primarily due to gender discrimination');
     setView('game');
     setDemoIndex(0);
     playNextDemoMessage(0, []);
@@ -117,7 +112,7 @@ const ChattitudeGame = () => {
   const handleMultiplayerMessage = async () => {
     if (!currentInput.trim() || analyzing || !roomIdInput) return;
     setAnalyzing(true);
-    const context = messages.length > 0 ? messages.slice(-2).map(m => `${m.player}: ${m.text}`).join('\n') : 'Detta är det första meddelandet.';
+    const context = messages.length > 0 ? messages.slice(-2).map(m => `${m.player}: ${m.text}`).join('\n') : 'This is the first message.';
     const analysis = await analyzeWithAI(currentInput, context);
     const playerNum = parseInt(localStorage.getItem('myPlayerNumber') || '1');
     const playerName = playerNum === 1 ? player1Name : player2Name;
@@ -134,13 +129,13 @@ const ChattitudeGame = () => {
     const demoMsg = demoConversation[index];
     setAnalyzing(true);
     await new Promise(resolve => setTimeout(resolve, 1500));
-    const context = currentMessages.length > 0 ? currentMessages.slice(-2).map(m => `${m.player}: ${m.text}`).join('\n') : 'Detta är det första meddelandet.';
+    const context = currentMessages.length > 0 ? currentMessages.slice(-2).map(m => `${m.player}: ${m.text}`).join('\n') : 'This is the first message.';
     const analysis = await analyzeWithAI(demoMsg.text, context);
     const newMessage = {
       player: demoMsg.player,
       playerNum: demoMsg.playerNum,
       text: demoMsg.text,
-      timestamp: new Date().toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' }),
+      timestamp: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
       analysis: analysis
     };
     let newQuality = dialogQuality;
@@ -162,60 +157,6 @@ const ChattitudeGame = () => {
     setTimeout(() => {
       playNextDemoMessage(index + 1, updatedMessages);
     }, 2500);
-  };
-
-  const handleSendMessage = () => {
-    if (!currentInput.trim() || countdown !== null) return;
-    setCountdown(10);
-  };
-
-  const handleCancelAndEdit = () => {
-    setCountdown(null);
-  };
-
-  const handleSendNow = () => {
-    setCountdown(0);
-  };
-
-  useEffect(() => {
-    if (countdown === null) return;
-    if (countdown > 0) {
-      const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
-      return () => clearTimeout(timer);
-    } else {
-      sendMessage();
-    }
-  }, [countdown]);
-
-  const sendMessage = async () => {
-    setAnalyzing(true);
-    const playerName = currentPlayer === 1 ? player1Name : player2Name;
-    const playerKey = currentPlayer === 1 ? 'player1' : 'player2' as 'player1' | 'player2';
-    const context = messages.length > 0 ? messages.slice(-2).map(m => `${m.player}: ${m.text}`).join('\n') : 'Detta är det första meddelandet.';
-    const analysis = await analyzeWithAI(currentInput, context);
-    const newMessage = {
-      player: playerName,
-      playerNum: currentPlayer,
-      text: currentInput,
-      timestamp: new Date().toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' }),
-      analysis: analysis
-    };
-    let newQuality = dialogQuality;
-    let newStats = { ...playerStats };
-    if (analysis.category === 'dirty_trick' && analysis.confidence >= 75) {
-      newQuality = Math.max(0, dialogQuality - 10);
-      newStats[playerKey].destructive += 1;
-    } else if (analysis.category === 'constructive' && analysis.confidence >= 75) {
-      newQuality = Math.min(100, dialogQuality + 15);
-      newStats[playerKey].constructive += 1;
-    }
-    setMessages([...messages, newMessage]);
-    setDialogQuality(newQuality);
-    setPlayerStats(newStats);
-    setCurrentPlayer(currentPlayer === 1 ? 2 : 1);
-    setCurrentInput('');
-    setCountdown(null);
-    setAnalyzing(false);
   };
 
   const analyzeWithAI = async (message: string, context: string) => {
@@ -242,79 +183,79 @@ const ChattitudeGame = () => {
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
         <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
           <div className="sticky top-0 bg-white border-b p-6 flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-gray-800">Debatttekniker</h2>
+            <h2 className="text-2xl font-bold text-gray-800">Debate Techniques</h2>
             <button onClick={() => setShowTechniquesModal(false)} className="text-gray-500 hover:text-gray-700 text-2xl">×</button>
           </div>
           <div className="p-6 space-y-8">
             <section>
-              <h3 className="text-xl font-bold text-red-600 mb-4">⚠️ Destruktiva tekniker</h3>
-              <p className="text-sm text-gray-600 mb-4">Dessa tekniker skadar konstruktiv dialog och bör undvikas.</p>
+              <h3 className="text-xl font-bold text-red-600 mb-4">⚠️ Destructive Techniques</h3>
+              <p className="text-sm text-gray-600 mb-4">These techniques damage constructive dialogue and should be avoided.</p>
               <div className="space-y-4">
                 <div className="bg-red-50 p-4 rounded-lg">
                   <h4 className="font-bold text-gray-800">Strawmanning</h4>
-                  <p className="text-sm text-gray-700 mt-1">Feltolka eller överdriva motpartens argument för att lättare attackera det.</p>
-                  <p className="text-xs text-gray-600 mt-2"><strong>Exempel:</strong> A: "Vi bör ha bättre kollektivtrafik" → B: "Så du vill förbjuda bilar?"</p>
+                  <p className="text-sm text-gray-700 mt-1">Misrepresenting or exaggerating the opponent's argument to make it easier to attack.</p>
+                  <p className="text-xs text-gray-600 mt-2"><strong>Example:</strong> A: "We should improve public transit" → B: "So you want to ban cars?"</p>
                 </div>
                 <div className="bg-red-50 p-4 rounded-lg">
                   <h4 className="font-bold text-gray-800">Loaded Question</h4>
-                  <p className="text-sm text-gray-700 mt-1">Fråga med inbyggd, obevisad förutsättning.</p>
-                  <p className="text-xs text-gray-600 mt-2"><strong>Exempel:</strong> "Varför hatar du frihet?" (antar att personen gör det)</p>
+                  <p className="text-sm text-gray-700 mt-1">A question with a built-in, unproven assumption.</p>
+                  <p className="text-xs text-gray-600 mt-2"><strong>Example:</strong> "Why do you hate freedom?" (assumes the person does)</p>
                 </div>
                 <div className="bg-red-50 p-4 rounded-lg">
                   <h4 className="font-bold text-gray-800">Personal Attack (Ad Hominem)</h4>
-                  <p className="text-sm text-gray-700 mt-1">Attackera personen istället för argumentet.</p>
-                  <p className="text-xs text-gray-600 mt-2"><strong>Exempel:</strong> "Du är för ung för att förstå detta"</p>
+                  <p className="text-sm text-gray-700 mt-1">Attacking the person instead of the argument.</p>
+                  <p className="text-xs text-gray-600 mt-2"><strong>Example:</strong> "You're too young to understand this"</p>
                 </div>
                 <div className="bg-red-50 p-4 rounded-lg">
                   <h4 className="font-bold text-gray-800">Whataboutism</h4>
-                  <p className="text-sm text-gray-700 mt-1">Avleda genom att peka på annat problem.</p>
-                  <p className="text-xs text-gray-600 mt-2"><strong>Exempel:</strong> "Vad sägs om USA:s problem då?" (när man diskuterar annat)</p>
+                  <p className="text-sm text-gray-700 mt-1">Deflecting by pointing to another problem.</p>
+                  <p className="text-xs text-gray-600 mt-2"><strong>Example:</strong> "What about America's problems?" (when discussing something else)</p>
                 </div>
                 <div className="bg-red-50 p-4 rounded-lg">
                   <h4 className="font-bold text-gray-800">False Dilemma</h4>
-                  <p className="text-sm text-gray-700 mt-1">Presentera endast två alternativ när fler finns.</p>
-                  <p className="text-xs text-gray-600 mt-2"><strong>Exempel:</strong> "Antingen är du med oss eller mot oss"</p>
+                  <p className="text-sm text-gray-700 mt-1">Presenting only two options when more exist.</p>
+                  <p className="text-xs text-gray-600 mt-2"><strong>Example:</strong> "You're either with us or against us"</p>
                 </div>
               </div>
             </section>
             <section>
-              <h3 className="text-xl font-bold text-green-600 mb-4">✨ Konstruktiva tekniker</h3>
-              <p className="text-sm text-gray-600 mb-4">Dessa tekniker bygger förståelse och konstruktiv dialog.</p>
+              <h3 className="text-xl font-bold text-green-600 mb-4">✨ Constructive Techniques</h3>
+              <p className="text-sm text-gray-600 mb-4">These techniques build understanding and constructive dialogue.</p>
               <div className="space-y-4">
                 <div className="bg-green-50 p-4 rounded-lg">
                   <h4 className="font-bold text-gray-800">Steelmanning</h4>
-                  <p className="text-sm text-gray-700 mt-1">Presentera motpartens argument i sin STARKASTE form innan du svarar.</p>
-                  <p className="text-xs text-gray-600 mt-2"><strong>Exempel:</strong> "Om jag förstår dig rätt menar du [starkt formulerat], vilket är en viktig poäng..."</p>
+                  <p className="text-sm text-gray-700 mt-1">Present the opponent's argument in its STRONGEST form before responding.</p>
+                  <p className="text-xs text-gray-600 mt-2"><strong>Example:</strong> "If I understand correctly, you mean [strongly stated], which is an important point..."</p>
                 </div>
                 <div className="bg-green-50 p-4 rounded-lg">
                   <h4 className="font-bold text-gray-800">Acknowledging Valid Points</h4>
-                  <p className="text-sm text-gray-700 mt-1">Erkänna när motparten har rätt i något.</p>
-                  <p className="text-xs text-gray-600 mt-2"><strong>Exempel:</strong> "Du har rätt i att X är ett problem. Samtidigt tänker jag att..."</p>
+                  <p className="text-sm text-gray-700 mt-1">Recognize when the opponent makes a good point.</p>
+                  <p className="text-xs text-gray-600 mt-2"><strong>Example:</strong> "You're right that X is a problem. At the same time, I think..."</p>
                 </div>
                 <div className="bg-green-50 p-4 rounded-lg">
                   <h4 className="font-bold text-gray-800">Seeking Genuine Clarification</h4>
-                  <p className="text-sm text-gray-700 mt-1">Ärligt fråga vad motparten menar - inte som fälla.</p>
-                  <p className="text-xs text-gray-600 mt-2"><strong>Exempel:</strong> "Kan du utveckla vad du menar med X? Jag vill förstå din tankegång"</p>
+                  <p className="text-sm text-gray-700 mt-1">Honestly ask what the opponent means - not as a trap.</p>
+                  <p className="text-xs text-gray-600 mt-2"><strong>Example:</strong> "Can you explain what you mean by X? I want to understand your thinking"</p>
                 </div>
                 <div className="bg-green-50 p-4 rounded-lg">
                   <h4 className="font-bold text-gray-800">Finding Common Ground</h4>
-                  <p className="text-sm text-gray-700 mt-1">Identifiera områden där ni är överens.</p>
-                  <p className="text-xs text-gray-600 mt-2"><strong>Exempel:</strong> "Vi är båda överens om att problemet existerar, skillnaden är hur vi löser det"</p>
+                  <p className="text-sm text-gray-700 mt-1">Identify areas where you agree.</p>
+                  <p className="text-xs text-gray-600 mt-2"><strong>Example:</strong> "We both agree the problem exists, the difference is how we solve it"</p>
                 </div>
               </div>
             </section>
             <section className="border-t pt-6">
-              <h3 className="text-lg font-bold text-gray-800 mb-3">📚 Akademiska källor</h3>
+              <h3 className="text-lg font-bold text-gray-800 mb-3">📚 Academic Sources</h3>
               <div className="space-y-2 text-sm text-gray-700">
-                <p><strong>Logiska felslut:</strong> Aristotle, "Sophistical Refutations" (~350 BCE); Irving Copi, "Introduction to Logic" (1953)</p>
-                <p><strong>Konstruktiv dialog:</strong> Carl Rogers, "On Becoming a Person" (1961); Marshall Rosenberg, "Nonviolent Communication" (1999)</p>
+                <p><strong>Logical fallacies:</strong> Aristotle, "Sophistical Refutations" (~350 BCE); Irving Copi, "Introduction to Logic" (1953)</p>
+                <p><strong>Constructive dialogue:</strong> Carl Rogers, "On Becoming a Person" (1961); Marshall Rosenberg, "Nonviolent Communication" (1999)</p>
                 <p><strong>Steelmanning:</strong> Daniel Dennett, "Intuition Pumps and Other Tools for Thinking" (2013)</p>
                 <p><strong>Street Epistemology:</strong> Peter Boghossian, "A Manual for Creating Atheists" (2013)</p>
               </div>
             </section>
           </div>
           <div className="sticky bottom-0 bg-gray-50 p-4 border-t">
-            <button onClick={() => setShowTechniquesModal(false)} className="w-full bg-purple-600 text-white py-3 rounded-xl font-semibold hover:bg-purple-700 transition-colors">Stäng</button>
+            <button onClick={() => setShowTechniquesModal(false)} className="w-full bg-purple-600 text-white py-3 rounded-xl font-semibold hover:bg-purple-700 transition-colors">Close</button>
           </div>
         </div>
       </div>
@@ -330,37 +271,33 @@ const ChattitudeGame = () => {
             <div className="text-center mb-8">
               <MessageCircle className="w-16 h-16 mx-auto mb-4 text-purple-600" />
               <h1 className="text-4xl font-bold text-gray-800 mb-2">Chattitude</h1>
-              <p className="text-gray-600 mb-2">Konstruktiv debatt genom gamification</p>
-              <div className="flex items-center justify-center gap-2 text-sm text-purple-600">
-                <Sparkles className="w-4 h-4" />
-                <span className="font-semibold">AI-Powered Detection</span>
-              </div>
+              <p className="text-xl text-gray-700 mb-1">Better conversations</p>
+              <p className="text-gray-600">AI-powered chat for tough topics</p>
             </div>
             <div className="space-y-6 mb-8">
               <div className="bg-purple-50 p-6 rounded-xl">
-                <h2 className="font-bold text-lg mb-2">Varför Chattitude?</h2>
-                <p className="text-gray-700">AI coachar er i realtid att föra konstruktiva diskussioner.</p>
+                <h2 className="font-bold text-lg mb-2">Why Chattitude?</h2>
+                <p className="text-gray-700">AI coaches you in real-time to have constructive conversations about difficult topics.</p>
               </div>
               <div className="bg-yellow-50 p-4 rounded-xl border-2 border-yellow-200">
-                <p className="text-sm font-semibold mb-2">⚠️ BETA-version:</p>
-                <p className="text-sm text-gray-700">AI:n lär sig fortfarande och kan göra fel. Hjälp oss förbättra genom att rapportera konstigheter!</p>
+                <p className="text-sm font-semibold mb-2">⚠️ BETA VERSION:</p>
+                <p className="text-sm text-gray-700">The AI is still learning and may make mistakes. Help us improve by reporting issues!</p>
               </div>
             </div>
             <div className="space-y-3">
-              <button onClick={() => setView('create')} className="w-full bg-purple-600 text-white py-4 rounded-xl font-semibold hover:bg-purple-700 transition-colors">Skapa Debatt</button>
+              <button onClick={startMultiplayer} className="w-full bg-purple-600 text-white py-4 rounded-xl font-semibold hover:bg-purple-700 transition-colors flex items-center justify-center gap-2">
+                <Users className="w-5 h-5" />
+                Start a Conversation
+              </button>
               <button onClick={startDemo} className="w-full bg-blue-600 text-white py-4 rounded-xl font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
                 <Sparkles className="w-5 h-5" />
-                Spela Demo: Peterson vs Newman
-              </button>
-              <button onClick={startMultiplayer} className="w-full bg-indigo-600 text-white py-4 rounded-xl font-semibold hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2">
-                <Users className="w-5 h-5" />
-                Skapa Multiplayer-debatt
+                Play Demo: Peterson vs Newman
               </button>
               <button onClick={() => setShowTechniquesModal(true)} className="w-full bg-green-600 text-white py-3 rounded-xl font-semibold hover:bg-green-700 transition-colors flex items-center justify-center gap-2">
                 <Info className="w-5 h-5" />
-                Lär dig om debatttekniker
+                Learn Debate Techniques
               </button>
-              <p className="text-center text-sm text-gray-500 mt-2">Se AI:n analysera en riktig debatt i realtid</p>
+              <p className="text-center text-sm text-gray-500 mt-2">Watch AI analyze a real debate in real-time</p>
             </div>
           </div>
         </div>
@@ -376,34 +313,26 @@ const ChattitudeGame = () => {
           <div className="bg-white rounded-2xl shadow-xl p-8">
             <div className="text-center mb-8">
               <Users className="w-16 h-16 mx-auto mb-4 text-purple-600" />
-              <h1 className="text-2xl font-bold text-gray-800 mb-2">Skapa Debatt</h1>
-              <p className="text-gray-600">Träna konstruktiv dialog med AI-coaching</p>
+              <h1 className="text-2xl font-bold text-gray-800 mb-2">Start a Conversation</h1>
+              <p className="text-gray-600">Practice constructive dialogue with AI coaching</p>
             </div>
             <div className="space-y-4 mb-6">
               <div className="bg-purple-50 p-4 rounded-xl">
-                <label className="block text-sm font-semibold mb-2 text-gray-700">Ditt namn:</label>
-                <input type="text" value={player1Name} onChange={(e) => setPlayer1Name(e.target.value)} placeholder="T.ex. Emma" className="w-full p-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-purple-400" />
+                <label className="block text-sm font-semibold mb-2 text-gray-700">Your name:</label>
+                <input type="text" value={player1Name} onChange={(e) => setPlayer1Name(e.target.value)} placeholder="e.g. Emma" className="w-full p-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-purple-400" />
               </div>
-              {!isMultiplayer && (
-                <div className="bg-blue-50 p-4 rounded-xl">
-                  <label className="block text-sm font-semibold mb-2 text-gray-700">Motpartens namn:</label>
-                  <input type="text" value={player2Name} onChange={(e) => setPlayer2Name(e.target.value)} placeholder="T.ex. Alex" className="w-full p-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-purple-400" />
-                </div>
-              )}
               <div className="bg-green-50 p-4 rounded-xl">
-                <label className="block text-sm font-semibold mb-2 text-gray-700">Debattämne:</label>
-                <textarea value={thesis} onChange={(e) => setThesis(e.target.value)} placeholder="T.ex. 'AI kommer ersätta de flesta kreativa jobb inom 5 år'" className="w-full p-3 border-2 border-gray-200 rounded-lg resize-none focus:outline-none focus:border-green-400" rows={3} />
+                <label className="block text-sm font-semibold mb-2 text-gray-700">Topic to discuss:</label>
+                <textarea value={thesis} onChange={(e) => setThesis(e.target.value)} placeholder="e.g. 'AI will replace most creative jobs within 5 years'" className="w-full p-3 border-2 border-gray-200 rounded-lg resize-none focus:outline-none focus:border-green-400" rows={3} />
               </div>
             </div>
-            {isMultiplayer && (
-              <div className="bg-indigo-50 p-4 rounded-xl border-2 border-indigo-200 mb-4">
-                <p className="text-sm"><strong>🌐 Multiplayer-läge:</strong> Du kommer få en länk att dela med din motdebattör!</p>
-              </div>
-            )}
-            <button onClick={isMultiplayer ? createMultiplayerRoom : startDebate} disabled={isMultiplayer ? (!player1Name.trim() || !thesis.trim()) : (!player1Name.trim() || !player2Name.trim() || !thesis.trim())} className="w-full bg-purple-600 text-white py-4 rounded-xl font-semibold hover:bg-purple-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed">
-              {isMultiplayer ? 'Skapa Rum & Kopiera Länk' : 'Starta Debatt'}
+            <div className="bg-indigo-50 p-4 rounded-xl border-2 border-indigo-200 mb-4">
+              <p className="text-sm"><strong>🌐 Share with someone:</strong> You'll get a link to share with the person you want to talk to!</p>
+            </div>
+            <button onClick={createMultiplayerRoom} disabled={!player1Name.trim() || !thesis.trim()} className="w-full bg-purple-600 text-white py-4 rounded-xl font-semibold hover:bg-purple-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed">
+              Create Room & Copy Link
             </button>
-            <button onClick={() => setView('intro')} className="w-full mt-3 bg-gray-100 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-200 transition-colors">Tillbaka</button>
+            <button onClick={() => setView('intro')} className="w-full mt-3 bg-gray-100 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-200 transition-colors">Back</button>
           </div>
         </div>
       </>
@@ -420,22 +349,22 @@ const ChattitudeGame = () => {
           <div className="bg-white rounded-2xl shadow-xl p-8">
             <div className="text-center mb-8">
               <Users className="w-16 h-16 mx-auto mb-4 text-indigo-600 animate-pulse" />
-              <h1 className="text-2xl font-bold text-gray-800 mb-2">Väntar på motdebattör...</h1>
-              <p className="text-gray-600">Dela länken nedan med den du vill debattera!</p>
+              <h1 className="text-2xl font-bold text-gray-800 mb-2">Waiting for the other person...</h1>
+              <p className="text-gray-600">Share the link below with who you want to talk to!</p>
             </div>
             <div className="bg-indigo-50 p-6 rounded-xl mb-6">
-              <p className="text-sm font-semibold mb-2">📋 Delbar länk (kopierad!):</p>
+              <p className="text-sm font-semibold mb-2">📋 Shareable link (copied!):</p>
               <div className="bg-white p-3 rounded-lg border-2 border-indigo-200 break-all text-sm">{shareLink}</div>
             </div>
             <div className="bg-yellow-50 p-4 rounded-xl border-2 border-yellow-200 mb-6">
-              <p className="text-sm"><strong>💡 Tips:</strong> Skicka länken via WhatsApp, SMS eller mejl till din motdebattör!</p>
+              <p className="text-sm"><strong>💡 Tip:</strong> Send the link via WhatsApp, SMS, or email!</p>
             </div>
             {roomData?.player2Name && (
               <div className="bg-green-50 p-4 rounded-xl border-2 border-green-200 mb-4">
-                <p className="text-sm font-semibold text-green-800">✅ {roomData.player2Name} har gått med! Startar snart...</p>
+                <p className="text-sm font-semibold text-green-800">✅ {roomData.player2Name} joined! Starting soon...</p>
               </div>
             )}
-            <button onClick={() => setView('intro')} className="w-full bg-gray-100 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-200 transition-colors">Avbryt</button>
+            <button onClick={() => setView('intro')} className="w-full bg-gray-100 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-200 transition-colors">Cancel</button>
           </div>
         </div>
       </>
@@ -450,12 +379,12 @@ const ChattitudeGame = () => {
           <div className="bg-white rounded-2xl shadow-xl p-8">
             <div className="text-center mb-8">
               <Users className="w-16 h-16 mx-auto mb-4 text-indigo-600" />
-              <h1 className="text-2xl font-bold text-gray-800 mb-2">Gå med i debatten!</h1>
+              <h1 className="text-2xl font-bold text-gray-800 mb-2">Join the conversation!</h1>
               {roomData && (
                 <>
-                  <p className="text-gray-600 mb-4">Du bjuds in av <strong>{roomData.player1Name}</strong></p>
+                  <p className="text-gray-600 mb-4">You're invited by <strong>{roomData.player1Name}</strong></p>
                   <div className="bg-purple-50 p-4 rounded-xl">
-                    <p className="text-sm font-semibold mb-1">📝 Tes:</p>
+                    <p className="text-sm font-semibold mb-1">📝 Topic:</p>
                     <p className="text-gray-700">{roomData.thesis}</p>
                   </div>
                 </>
@@ -463,11 +392,11 @@ const ChattitudeGame = () => {
             </div>
             <div className="space-y-4 mb-6">
               <div>
-                <label className="block text-sm font-semibold mb-2 text-gray-700">Ditt namn:</label>
-                <input type="text" value={player2Name} onChange={(e) => setPlayer2Name(e.target.value)} placeholder="T.ex. Anna" className="w-full p-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-purple-400" />
+                <label className="block text-sm font-semibold mb-2 text-gray-700">Your name:</label>
+                <input type="text" value={player2Name} onChange={(e) => setPlayer2Name(e.target.value)} placeholder="e.g. Anna" className="w-full p-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-purple-400" />
               </div>
             </div>
-            <button onClick={joinMultiplayerRoom} disabled={!player2Name.trim()} className="w-full bg-indigo-600 text-white py-4 rounded-xl font-semibold hover:bg-indigo-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed">Gå med i debatten</button>
+            <button onClick={joinMultiplayerRoom} disabled={!player2Name.trim()} className="w-full bg-indigo-600 text-white py-4 rounded-xl font-semibold hover:bg-indigo-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed">Join Conversation</button>
           </div>
         </div>
       </>
@@ -498,7 +427,7 @@ const ChattitudeGame = () => {
             </div>
             <div className="mb-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="font-semibold text-sm">Dialog-kvalitet</span>
+                <span className="font-semibold text-sm">Conversation quality</span>
                 <span className="text-sm">{dialogQuality}%</span>
               </div>
               <div className="w-full h-6 bg-gray-200 rounded-full overflow-hidden">
@@ -524,7 +453,7 @@ const ChattitudeGame = () => {
                           <p className="font-semibold">{msg.analysis.technique}<span className="ml-1 opacity-75">({msg.analysis.confidence}%)</span></p>
                           <button onClick={(e) => { e.stopPropagation(); setShowTechniquesModal(true); }} className="text-blue-600 hover:text-blue-800 flex items-center gap-1">
                             <Info className="w-3 h-3" />
-                            <span className="text-xs">Lär dig mer</span>
+                            <span className="text-xs">Learn more</span>
                           </button>
                         </div>
                         <p className="text-gray-700">{msg.analysis.explanation}</p>
@@ -541,38 +470,27 @@ const ChattitudeGame = () => {
                     <Sparkles className="w-5 h-5 text-blue-600 animate-pulse" />
                     <p className="font-bold text-lg text-blue-900">Demo Mode</p>
                   </div>
-                  <p className="text-sm text-gray-700 mb-2">{demoIndex < demoConversation.length ? `Meddelande ${demoIndex + 1} av ${demoConversation.length}` : 'Demo klar! Se hur AI:n identifierade dirty tricks ovan.'}</p>
-                  {analyzing && (<p className="text-xs text-gray-600">AI analyserar...</p>)}
+                  <p className="text-sm text-gray-700 mb-2">{demoIndex < demoConversation.length ? `Message ${demoIndex + 1} of ${demoConversation.length}` : 'Demo complete! See how AI identified dirty tricks above.'}</p>
+                  {analyzing && (<p className="text-xs text-gray-600">AI analyzing...</p>)}
                 </div>
               ) : (
                 <>
                   <div className="mb-3 text-sm font-semibold text-gray-600">
-                    {isMultiplayer && !isMyTurn ? (<span className="text-orange-600">Väntar på {currentPlayerName}...</span>) : (<>Nu är det <span className="text-purple-600">{currentPlayerName}s</span> tur</>)}
+                    {isMultiplayer && !isMyTurn ? (<span className="text-orange-600">Waiting for {currentPlayerName}...</span>) : (<>It's <span className="text-purple-600">{currentPlayerName}'s</span> turn</>)}
                   </div>
-                  {countdown !== null && (
-                    <div className="mb-4 p-4 bg-yellow-50 rounded-xl border-2 border-yellow-200 text-center">
-                      <p className="font-bold text-lg">Vänta ett ögonblick!</p>
-                      <p className="text-gray-700 mb-2">Är du säker på detta?</p>
-                      <div className="text-3xl font-bold text-yellow-600 mb-3">00:{countdown.toString().padStart(2, '0')}</div>
-                      <div className="flex gap-3 justify-center">
-                        <button onClick={handleCancelAndEdit} className="bg-white text-gray-700 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors border-2 border-gray-300">Avbryt & Redigera</button>
-                        <button onClick={handleSendNow} className="bg-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-purple-700 transition-colors">Skicka Direkt</button>
-                      </div>
-                    </div>
-                  )}
-                  <textarea value={currentInput} onChange={(e) => setCurrentInput(e.target.value)} placeholder="Skriv ditt meddelande..." disabled={countdown !== null} className="w-full p-3 border-2 border-gray-200 rounded-xl resize-none focus:outline-none focus:border-purple-400 disabled:bg-gray-50" rows={3} />
-                  <button onClick={isMultiplayer ? handleMultiplayerMessage : handleSendMessage} disabled={!currentInput.trim() || countdown !== null || analyzing || (isMultiplayer && !isMyTurn)} className="w-full mt-3 bg-purple-600 text-white py-3 rounded-xl font-semibold hover:bg-purple-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed">
-                    {countdown !== null ? 'Reflekterar...' : analyzing ? 'Analyserar med AI...' : 'Skicka Meddelande'}
+                  <textarea value={currentInput} onChange={(e) => setCurrentInput(e.target.value)} placeholder="Type your message..." disabled={false} className="w-full p-3 border-2 border-gray-200 rounded-xl resize-none focus:outline-none focus:border-purple-400 disabled:bg-gray-50" rows={3} />
+                  <button onClick={handleMultiplayerMessage} disabled={!currentInput.trim() || analyzing || (isMultiplayer && !isMyTurn)} className="w-full mt-3 bg-purple-600 text-white py-3 rounded-xl font-semibold hover:bg-purple-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed">
+                    {analyzing ? 'AI analyzing...' : 'Send Message'}
                   </button>
                 </>
               )}
               <button onClick={() => setView('intro')} className="w-full mt-3 bg-orange-500 text-white py-3 rounded-xl font-semibold hover:bg-orange-600 transition-colors flex items-center justify-center gap-2">
                 <MessageCircle className="w-4 h-4" />
-                Ditt sista ord
+                End Conversation
               </button>
-              <button onClick={() => alert('Tack för att du vill rapportera! Funktion kommer snart. Kontakta karl@chattitude.se med feedback.')} className="w-full mt-2 bg-gray-100 text-gray-700 py-2 rounded-xl text-sm font-medium hover:bg-gray-200 transition-colors flex items-center justify-center gap-2">
+              <button onClick={() => alert('Thank you for wanting to report! Feature coming soon. Contact lindahl.karl@gmail.com with feedback.')} className="w-full mt-2 bg-gray-100 text-gray-700 py-2 rounded-xl text-sm font-medium hover:bg-gray-200 transition-colors flex items-center justify-center gap-2">
                 <AlertCircle className="w-4 h-4" />
-                Rapportera om AI:n gjorde fel
+                Report if AI made a mistake
               </button>
             </div>
           </div>
