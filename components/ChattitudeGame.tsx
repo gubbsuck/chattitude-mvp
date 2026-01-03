@@ -29,18 +29,18 @@ const ChattitudeGame = () => {
 
   // Demo conversation data
   const demoConversation = [
-    { player: "Cathy", text: "You've said men need to sort themselves out and organize. How does that help women?", playerNum: 2 },
-    { player: "Jordan", text: "I'm saying society works better when people take responsibility. That applies to everyone.", playerNum: 1 },
-    { player: "Cathy", text: "But you mostly talk about men. Why should women accept your message?", playerNum: 2 },
-    { player: "Jordan", text: "I'm not saying they should 'accept' it. I'm saying the claim that the gender pay gap is solely due to gender is wrong.", playerNum: 1 },
-    { player: "Cathy", text: "So you're saying women aren't discriminated against in the workplace?", playerNum: 2 },
-    { player: "Jordan", text: "No, I'm not saying that. There are multiple factors. Education, occupation, hours worked, personality.", playerNum: 1 },
-    { player: "Cathy", text: "But the outcome is that women earn less. That's a fact.", playerNum: 2 },
-    { player: "Jordan", text: "Yes, but saying it's ONLY due to discrimination is oversimplified. We need to look at all variables.", playerNum: 1 },
-    { player: "Cathy", text: "Why would women choose lower-paid jobs if they have the same opportunities?", playerNum: 2 },
-    { player: "Jordan", text: "That's a good question. Research shows that in countries with more gender equality, differences in career choices become larger, not smaller. It's called the 'gender equality paradox'.", playerNum: 1 },
-    { player: "Cathy", text: "But isn't that proof the system is rigged?", playerNum: 2 },
-    { player: "Jordan", text: "Or it shows that men and women on average have different interests when they have freedom to choose. That doesn't mean everyone is the same.", playerNum: 1 }
+    { player: "Sam", text: "You've said men need to sort themselves out and organize. How does that help women?", playerNum: 2 },
+    { player: "Alex", text: "I'm saying society works better when people take responsibility. That applies to everyone.", playerNum: 1 },
+    { player: "Sam", text: "But you mostly talk about men. Why should women accept your message?", playerNum: 2 },
+    { player: "Alex", text: "I'm not saying they should 'accept' it. I'm saying the claim that the gender pay gap is solely due to gender is wrong.", playerNum: 1 },
+    { player: "Sam", text: "So you're saying women aren't discriminated against in the workplace?", playerNum: 2 },
+    { player: "Alex", text: "No, I'm not saying that. There are multiple factors. Education, occupation, hours worked, personality.", playerNum: 1 },
+    { player: "Sam", text: "But the outcome is that women earn less. That's a fact.", playerNum: 2 },
+    { player: "Alex", text: "Yes, but saying it's ONLY due to discrimination is oversimplified. We need to look at all variables.", playerNum: 1 },
+    { player: "Sam", text: "Why would women choose lower-paid jobs if they have the same opportunities?", playerNum: 2 },
+    { player: "Alex", text: "That's a good question. Research shows that in countries with more gender equality, differences in career choices become larger, not smaller. It's called the 'gender equality paradox'.", playerNum: 1 },
+    { player: "Sam", text: "But isn't that proof the system is rigged?", playerNum: 2 },
+    { player: "Alex", text: "Or it shows that men and women on average have different interests when they have freedom to choose. That doesn't mean everyone is the same.", playerNum: 1 }
   ];
 
   useEffect(() => {
@@ -76,8 +76,8 @@ const ChattitudeGame = () => {
 
   const startDemo = async () => {
     setIsDemo(true);
-    setPlayer1Name('Jordan');
-    setPlayer2Name('Cathy');
+    setPlayer1Name('Alex');
+    setPlayer2Name('Sam');
     setThesis('The gender pay gap is primarily due to gender discrimination');
     setView('game');
     setDemoIndex(0);
@@ -274,30 +274,20 @@ const ChattitudeGame = () => {
               <p className="text-xl text-gray-700 mb-1">Better conversations</p>
               <p className="text-gray-600">AI-powered chat for tough topics</p>
             </div>
-            <div className="space-y-6 mb-8">
-              <div className="bg-purple-50 p-6 rounded-xl">
-                <h2 className="font-bold text-lg mb-2">Why Chattitude?</h2>
-                <p className="text-gray-700">AI coaches you in real-time to have constructive conversations about difficult topics.</p>
-              </div>
-              <div className="bg-yellow-50 p-4 rounded-xl border-2 border-yellow-200">
-                <p className="text-sm font-semibold mb-2">⚠️ BETA VERSION:</p>
-                <p className="text-sm text-gray-700">The AI is still learning and may make mistakes. Help us improve by reporting issues!</p>
-              </div>
-            </div>
-            <div className="space-y-3">
+            <div className="space-y-3 mb-6">
               <button onClick={startMultiplayer} className="w-full bg-purple-600 text-white py-4 rounded-xl font-semibold hover:bg-purple-700 transition-colors flex items-center justify-center gap-2">
                 <Users className="w-5 h-5" />
                 Start a Conversation
               </button>
               <button onClick={startDemo} className="w-full bg-blue-600 text-white py-4 rounded-xl font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
                 <Sparkles className="w-5 h-5" />
-                Play Demo: Peterson vs Newman
+                Play Demo: Alex & Sam
               </button>
               <button onClick={() => setShowTechniquesModal(true)} className="w-full bg-green-600 text-white py-3 rounded-xl font-semibold hover:bg-green-700 transition-colors flex items-center justify-center gap-2">
                 <Info className="w-5 h-5" />
                 Learn Debate Techniques
               </button>
-              <p className="text-center text-sm text-gray-500 mt-2">Watch AI analyze a real debate in real-time</p>
+              <p className="text-center text-xs text-gray-500 mt-4">⚠️ Beta version · AI may make mistakes · Help us improve by reporting issues</p>
             </div>
           </div>
         </div>
