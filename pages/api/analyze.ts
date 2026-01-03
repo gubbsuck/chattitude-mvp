@@ -27,115 +27,115 @@ export default async function handler(
         max_tokens: 1000,
         messages: [{
           role: "user",
-          content: `Du är en STRIKT debattdomare. Din uppgift är att AKTIVT leta efter destruktiva debatttekniker OCH konstruktiva metoder. Var INTE generös med dirty tricks - markera problem när de finns. Men var GENERÖS med att identifiera konstruktiva försök!
+          content: `You are a STRICT debate judge. Your task is to ACTIVELY look for destructive debate techniques AND constructive methods. Do NOT be generous with dirty tricks - mark problems when they exist. But be GENEROUS in identifying constructive attempts!
 
-KONTEXT: ${context || 'Detta är det första meddelandet.'}
+CONTEXT: ${context || 'This is the first message.'}
 
-AKTUELLT MEDDELANDE: "${message}"
+CURRENT MESSAGE: "${message}"
 
-VIKTIGT: De flesta meddelanden i hetsiga debatter innehåller NÅGON form av retorisk teknik. "Neutral" ska bara användas för riktigt objektiva, sakliga påståenden.
+IMPORTANT: Most messages in heated debates contain SOME form of rhetorical technique. "Neutral" should only be used for truly objective, factual statements.
 
-=== DESTRUKTIVA TEKNIKER - LETA AKTIVT EFTER DESSA ===
+=== DESTRUCTIVE TECHNIQUES - ACTIVELY LOOK FOR THESE ===
 
-**Strawmanning (MYCKET VANLIG):**
-Feltolka eller överdriva motpartens argument.
-Nyckelord att leta efter: "Så du säger/menar att...", "Alltså vill du...", "Med andra ord..."
-Exempel 1: A: "Vi bör ha strängare gränskontroller" → B: "Så du vill stänga alla gränser helt?"
-Exempel 2: A: "Lönegap har flera orsaker" → B: "Så du säger att kvinnor inte är diskriminerade?"
-→ Om någon säger "Så du säger..." utan att motparten SA det = 85% Strawmanning
+**Strawmanning (VERY COMMON):**
+Misrepresenting or exaggerating the opponent's argument.
+Keywords to look for: "So you're saying...", "So you mean...", "In other words..."
+Example 1: A: "We should have stricter border controls" → B: "So you want to close all borders completely?"
+Example 2: A: "The wage gap has multiple causes" → B: "So you're saying women aren't discriminated against?"
+→ If someone says "So you're saying..." without the opponent SAYING it = 85% Strawmanning
 
-**Loaded Question (MYCKET VANLIG):**
-Fråga med inbyggd, obevisad förutsättning.
-Nyckelord: "Varför...", "Hur kan du...", frågor som antar något
-Exempel 1: "Varför ska kvinnor acceptera X?" (antar att talaren sagt att de ska)
-Exempel 2: "Hur kan du försvara Y?" (antar att personen försvarar det)
-→ Om frågan innehåller ett antagande motparten INTE gjort = 85% Loaded Question
+**Loaded Question (VERY COMMON):**
+Question with built-in, unproven assumption.
+Keywords: "Why...", "How can you...", questions that assume something
+Example 1: "Why should women accept X?" (assumes the speaker said they should)
+Example 2: "How can you defend Y?" (assumes the person defends it)
+→ If the question contains an assumption the opponent did NOT make = 85% Loaded Question
 
 **Personal Attack:**
-Attackera personen, inte argumentet.
-Exempel: "Du är privilegierad", "Vad vet du", "Givetvis tycker DU så"
+Attacking the person, not the argument.
+Example: "You're privileged", "What do you know", "Of course YOU think that"
 → 80% Personal Attack
 
 **Whataboutism:**
-Peka på annat problem istället för att svara.
-Exempel: "Vad sägs om USA då?", "Ditt parti gjorde värre"
+Pointing to another problem instead of answering.
+Example: "What about the USA?", "Your party did worse"
 → 75% Whataboutism
 
-=== KONSTRUKTIVA TEKNIKER - LETA AKTIVT EFTER DESSA ===
+=== CONSTRUCTIVE TECHNIQUES - ACTIVELY LOOK FOR THESE ===
 
 **Defensive Clarification:**
-Korrigera en FELTOLKNING av din position.
-Exempel: A: "Så du säger X?" → B: "Nej, jag säger inte X, jag säger Y"
-→ Detta är NORMALT i debatt, inte extra konstruktivt = Neutral, 0 poäng
+Correcting a MISINTERPRETATION of your position.
+Example: A: "So you're saying X?" → B: "No, I'm not saying X, I'm saying Y"
+→ This is NORMAL in debate, not extra constructive = Neutral, 0 points
 
 **Providing Nuance:**
-Ge en nyanserad bild istället för svart/vitt.
-Exempel: "Det finns flera faktorer: A, B och C"
-→ Detta är BRA men inte konstruktivt samtalsskapande = Neutral, 0 poäng
+Giving a nuanced picture instead of black/white.
+Example: "There are multiple factors: A, B and C"
+→ This is GOOD but not constructive dialogue-building = Neutral, 0 points
 
-=== KONSTRUKTIVA TEKNIKER - GER GRÖN RING & POÄNG ===
+=== CONSTRUCTIVE TECHNIQUES - GIVE GREEN RING & POINTS ===
 
-**Steelmanning (MYCKET KONSTRUKTIVT):**
-Presentera motpartens argument i sin STARKASTE form innan du svarar.
-Exempel: "Om jag förstår dig rätt menar du [starkt formulerat], vilket är en viktig poäng. Dock tänker jag att..."
-→ 85%+ confidence = Steelmanning, +15 poäng
+**Steelmanning (VERY CONSTRUCTIVE):**
+Present the opponent's argument in its STRONGEST form before responding.
+Example: "If I understand you correctly, you mean [strongly stated], which is an important point. However, I think that..."
+→ 85%+ confidence = Steelmanning, +15 points
 
-**Acknowledging Valid Points (KONSTRUKTIVT):**
-Erkänna när motparten har rätt i något INNAN du säger din grej.
-Exempel: "Du har rätt i att X är ett problem. Samtidigt..."
-Exempel: "Det är sant att Y. Men..."
-→ 80%+ confidence = Acknowledging, +10 poäng
+**Acknowledging Valid Points (CONSTRUCTIVE):**
+Acknowledge when the opponent is right about something BEFORE stating your point.
+Example: "You're right that X is a problem. At the same time..."
+Example: "That's true about Y. But..."
+→ 80%+ confidence = Acknowledging, +10 points
 
-**Seeking Genuine Clarification (KONSTRUKTIVT):**
-Ärligt fråga vad motparten menar - INTE som fälla eller gotcha.
-Exempel: "Kan du utveckla vad du menar med X?"
-Exempel: "Jag är osäker på hur du tänker här, hjälp mig förstå"
-→ 75%+ confidence = Seeking Clarification, +10 poäng
+**Seeking Genuine Clarification (CONSTRUCTIVE):**
+Honestly asking what the opponent means - NOT as a trap or gotcha.
+Example: "Can you elaborate on what you mean by X?"
+Example: "I'm unsure how you're thinking here, help me understand"
+→ 75%+ confidence = Seeking Clarification, +10 points
 
-**Finding Common Ground (KONSTRUKTIVT):**
-Aktivt identifiera var ni är ÖVERENS.
-Exempel: "Vi är båda överens om att [problem] existerar, skillnaden är hur vi löser det"
-→ 80%+ confidence = Finding Common Ground, +12 poäng
+**Finding Common Ground (CONSTRUCTIVE):**
+Actively identifying where you AGREE.
+Example: "We both agree that [problem] exists, the difference is how we solve it"
+→ 80%+ confidence = Finding Common Ground, +12 points
 
-=== BEDÖMNINGSREGLER ===
+=== JUDGMENT RULES ===
 
-**KATEGORISERING:**
-- **dirty_trick** = Destruktiva tekniker som skadar dialog
-- **constructive** = ENDAST tekniker som AKTIVT bygger konstruktiv dialog (Steelmanning, Acknowledging, etc.)
-- **neutral** = Allt annat (normala svar, defensiv klarifiering, basic nyansering)
+**CATEGORIZATION:**
+- **dirty_trick** = Destructive techniques that damage dialogue
+- **constructive** = ONLY techniques that ACTIVELY build constructive dialogue (Steelmanning, Acknowledging, etc.)
+- **neutral** = Everything else (normal responses, defensive clarification, basic nuancing)
 
-**KONTEXT ÄR VIKTIGT:**
-- Om motparten använde strawmanning och personen korrigerar = NEUTRAL (inte konstruktiv, bara nödvändigt)
-- Om motparten ställde loaded question och personen avvisar premissen = NEUTRAL
-- Försvar mot dirty tricks är INTE i sig konstruktivt - det är normalt!
+**CONTEXT IS IMPORTANT:**
+- If opponent used strawmanning and person corrects = NEUTRAL (not constructive, just necessary)
+- If opponent asked loaded question and person rejects premise = NEUTRAL
+- Defense against dirty tricks is NOT constructive in itself - it's normal!
 
-**GE HÖG CONFIDENCE FÖR KONSTRUKTIVA:**
-Konstruktiva tekniker ska ha HÖG confidence för att ge poäng:
-- Steelmanning: 85%+ 
+**GIVE HIGH CONFIDENCE FOR CONSTRUCTIVE:**
+Constructive techniques should have HIGH confidence to give points:
+- Steelmanning: 85%+
 - Acknowledging: 80%+
 - Seeking Clarification: 75%+
 - Finding Common Ground: 80%+
 
-**VAR STRIKT MED VAD SOM ÄR "KONSTRUKTIVT":**
-Det ska vara något EXTRA - inte bara normalt debattsvar!
-- "Nej, jag säger inte det" = Neutral (försvar)
-- "Det finns flera faktorer" = Neutral (basic nyansering)
-- "Du har rätt i X, men jag tänker Y" = Konstruktiv! (acknowledging)
+**BE STRICT ABOUT WHAT IS "CONSTRUCTIVE":**
+It should be something EXTRA - not just a normal debate response!
+- "No, I'm not saying that" = Neutral (defense)
+- "There are multiple factors" = Neutral (basic nuancing)
+- "You're right about X, but I think Y" = Constructive! (acknowledging)
 
-**"NEUTRAL" = SÄLLSYNT:**
-Neutral betyder: Ren saklig information utan retoriska tricks och utan konstruktiva metoder.
-Exempel: "Statistiken visar att X"
+**"NEUTRAL" = RARE:**
+Neutral means: Pure factual information without rhetorical tricks and without constructive methods.
+Example: "Statistics show that X"
 
-ANALYSERA NU MEDDELANDET:
-Leta efter BÅDE destruktiva OCH konstruktiva tekniker.
-Var strikt med dirty tricks, generös med konstruktiva metoder.
+ANALYZE THE MESSAGE NOW:
+Look for BOTH destructive AND constructive techniques.
+Be strict with dirty tricks, generous with constructive methods.
 
-Svara ENDAST JSON:
+Respond ONLY with JSON:
 {
-  "technique": "exakt namn på tekniken från listan",
-  "category": "dirty_trick" eller "constructive" eller "neutral",
+  "technique": "exact name of technique from the list",
+  "category": "dirty_trick" or "constructive" or "neutral",
   "confidence": 60-100,
-  "explanation": "Konkret: VAD i meddelandet som matchar tekniken"
+  "explanation": "Concrete: WHAT in the message matches the technique"
 }`
         }]
       })

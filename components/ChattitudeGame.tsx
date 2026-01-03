@@ -81,7 +81,8 @@ const ChattitudeGame = () => {
     setThesis('The gender pay gap is primarily due to gender discrimination');
     setView('game');
     setDemoIndex(0);
-    playNextDemoMessage(0, []);
+    setDialogQuality(100);
+    playNextDemoMessage(0, [], 100);
   };
 
   const startMultiplayer = () => {
@@ -121,7 +122,7 @@ const ChattitudeGame = () => {
     setAnalyzing(false);
   };
 
-  const playNextDemoMessage = async (index: number, currentMessages: any[]) => {
+  const playNextDemoMessage = async (index: number, currentMessages: any[], currentQuality: number = 100) => {
     if (index >= demoConversation.length) {
       setIsDemo(false);
       return;
@@ -138,14 +139,14 @@ const ChattitudeGame = () => {
       timestamp: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
       analysis: analysis
     };
-    let newQuality = dialogQuality;
+    let newQuality = currentQuality;
     const playerKey = demoMsg.playerNum === 1 ? 'player1' : 'player2' as 'player1' | 'player2';
     let newStats = { ...playerStats };
     if (analysis.category === 'dirty_trick' && analysis.confidence >= 75) {
-      newQuality = Math.max(0, dialogQuality - 10);
+      newQuality = Math.max(0, currentQuality - 10);
       newStats[playerKey].destructive += 1;
     } else if (analysis.category === 'constructive' && analysis.confidence >= 75) {
-      newQuality = Math.min(100, dialogQuality + 15);
+      newQuality = Math.min(100, currentQuality + 15);
       newStats[playerKey].constructive += 1;
     }
     const updatedMessages = [...currentMessages, newMessage];
@@ -155,7 +156,7 @@ const ChattitudeGame = () => {
     setAnalyzing(false);
     setDemoIndex(index + 1);
     setTimeout(() => {
-      playNextDemoMessage(index + 1, updatedMessages);
+      playNextDemoMessage(index + 1, updatedMessages, newQuality);
     }, 2500);
   };
 
