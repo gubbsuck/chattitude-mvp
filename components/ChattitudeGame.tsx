@@ -27,20 +27,140 @@ const ChattitudeGame = () => {
   const [roomIdInput, setRoomIdInput] = useState('');
   const { roomData, isConnected, createRoom, joinRoom, sendMessage: sendMultiplayerMessage } = useMultiplayerRoom(roomIdInput || null);
 
-  // Demo conversation data
+  // Demo conversation data with pre-analyzed responses (no API calls = free!)
   const demoConversation = [
-    { player: "Sam", text: "You've said men need to sort themselves out and organize. How does that help women?", playerNum: 2 },
-    { player: "Alex", text: "I'm saying society works better when people take responsibility. That applies to everyone.", playerNum: 1 },
-    { player: "Sam", text: "But you mostly talk about men. Why should women accept your message?", playerNum: 2 },
-    { player: "Alex", text: "I'm not saying they should 'accept' it. I'm saying the claim that the gender pay gap is solely due to gender is wrong.", playerNum: 1 },
-    { player: "Sam", text: "So you're saying women aren't discriminated against in the workplace?", playerNum: 2 },
-    { player: "Alex", text: "No, I'm not saying that. There are multiple factors. Education, occupation, hours worked, personality.", playerNum: 1 },
-    { player: "Sam", text: "But the outcome is that women earn less. That's a fact.", playerNum: 2 },
-    { player: "Alex", text: "Yes, but saying it's ONLY due to discrimination is oversimplified. We need to look at all variables.", playerNum: 1 },
-    { player: "Sam", text: "Why would women choose lower-paid jobs if they have the same opportunities?", playerNum: 2 },
-    { player: "Alex", text: "That's a good question. Research shows that in countries with more gender equality, differences in career choices become larger, not smaller. It's called the 'gender equality paradox'.", playerNum: 1 },
-    { player: "Sam", text: "But isn't that proof the system is rigged?", playerNum: 2 },
-    { player: "Alex", text: "Or it shows that men and women on average have different interests when they have freedom to choose. That doesn't mean everyone is the same.", playerNum: 1 }
+    { 
+      player: "Sam", 
+      text: "You've said men need to sort themselves out and organize. How does that help women?", 
+      playerNum: 2,
+      analysis: {
+        technique: "Loaded Question",
+        category: "dirty_trick",
+        confidence: 90,
+        explanation: "The question contains an unproven assumption - it assumes the speaker's message is only about men and needs to specifically 'help women', when the actual statement was about society broadly."
+      }
+    },
+    { 
+      player: "Alex", 
+      text: "I'm saying society works better when people take responsibility. That applies to everyone.", 
+      playerNum: 1,
+      analysis: {
+        technique: "Finding Common Ground",
+        category: "constructive",
+        confidence: 82,
+        explanation: "The response emphasizes universal application ('applies to everyone'), actively seeking shared values rather than defending a narrow position."
+      }
+    },
+    { 
+      player: "Sam", 
+      text: "But you mostly talk about men. Why should women accept your message?", 
+      playerNum: 2,
+      analysis: {
+        technique: "Loaded Question",
+        category: "dirty_trick",
+        confidence: 85,
+        explanation: "Another loaded question with the assumption that 'women' need to 'accept' a specific gendered message, when the previous statement was about universal responsibility."
+      }
+    },
+    { 
+      player: "Alex", 
+      text: "I'm not saying they should 'accept' it. I'm saying the claim that the gender pay gap is solely due to gender is wrong.", 
+      playerNum: 1,
+      analysis: {
+        technique: "Defensive Clarification",
+        category: "neutral",
+        confidence: 70,
+        explanation: "This is a necessary correction of a mischaracterization. It's not extra constructive, just normal defensive clarification to reject a false premise."
+      }
+    },
+    { 
+      player: "Sam", 
+      text: "So you're saying women aren't discriminated against in the workplace?", 
+      playerNum: 2,
+      analysis: {
+        technique: "Strawmanning",
+        category: "dirty_trick",
+        confidence: 95,
+        explanation: "Classic strawman - the speaker said the pay gap has 'multiple factors', but this reframes it as claiming discrimination doesn't exist at all. That's not what was said."
+      }
+    },
+    { 
+      player: "Alex", 
+      text: "No, I'm not saying that. There are multiple factors. Education, occupation, hours worked, personality.", 
+      playerNum: 1,
+      analysis: {
+        technique: "Providing Nuance",
+        category: "neutral",
+        confidence: 65,
+        explanation: "Clarifying a misrepresentation and offering multiple factors. This is normal debate nuancing, not actively constructive dialogue-building."
+      }
+    },
+    { 
+      player: "Sam", 
+      text: "But the outcome is that women earn less. That's a fact.", 
+      playerNum: 2,
+      analysis: {
+        technique: "Neutral Statement",
+        category: "neutral",
+        confidence: 60,
+        explanation: "Stating a factual claim without rhetorical tricks or constructive techniques. Just presenting information."
+      }
+    },
+    { 
+      player: "Alex", 
+      text: "Yes, but saying it's ONLY due to discrimination is oversimplified. We need to look at all variables.", 
+      playerNum: 1,
+      analysis: {
+        technique: "Acknowledging Valid Points",
+        category: "constructive",
+        confidence: 80,
+        explanation: "Starts by acknowledging the other person's point ('Yes') before adding nuance. This is constructive - recognizing what's true in the opponent's position."
+      }
+    },
+    { 
+      player: "Sam", 
+      text: "Why would women choose lower-paid jobs if they have the same opportunities?", 
+      playerNum: 2,
+      analysis: {
+        technique: "Seeking Genuine Clarification",
+        category: "constructive",
+        confidence: 75,
+        explanation: "This appears to be an honest question seeking to understand the logic, not a rhetorical trap. It's asking for clarification of the reasoning."
+      }
+    },
+    { 
+      player: "Alex", 
+      text: "That's a good question. Research shows that in countries with more gender equality, differences in career choices become larger, not smaller. It's called the 'gender equality paradox'.", 
+      playerNum: 1,
+      analysis: {
+        technique: "Acknowledging Valid Points",
+        category: "constructive",
+        confidence: 85,
+        explanation: "Explicitly acknowledges the question as valid ('That's a good question') before providing an evidence-based response. This is highly constructive dialogue."
+      }
+    },
+    { 
+      player: "Sam", 
+      text: "But isn't that proof the system is rigged?", 
+      playerNum: 2,
+      analysis: {
+        technique: "Loaded Question",
+        category: "dirty_trick",
+        confidence: 80,
+        explanation: "The question assumes a conclusion ('the system is rigged') and asks for confirmation rather than genuinely exploring alternative explanations."
+      }
+    },
+    { 
+      player: "Alex", 
+      text: "Or it shows that men and women on average have different interests when they have freedom to choose. That doesn't mean everyone is the same.", 
+      playerNum: 1,
+      analysis: {
+        technique: "Providing Nuance",
+        category: "neutral",
+        confidence: 70,
+        explanation: "Offers an alternative explanation with appropriate caveats. Normal debate response - not destructive but not actively constructive either."
+      }
+    }
   ];
 
   useEffect(() => {
@@ -129,9 +249,13 @@ const ChattitudeGame = () => {
     }
     const demoMsg = demoConversation[index];
     setAnalyzing(true);
+    
+    // Simulate AI processing time for realism
     await new Promise(resolve => setTimeout(resolve, 1500));
-    const context = currentMessages.length > 0 ? currentMessages.slice(-2).map(m => `${m.player}: ${m.text}`).join('\n') : 'This is the first message.';
-    const analysis = await analyzeWithAI(demoMsg.text, context);
+    
+    // Use pre-analyzed data (no API call!)
+    const analysis = demoMsg.analysis;
+    
     const newMessage = {
       player: demoMsg.player,
       playerNum: demoMsg.playerNum,
@@ -139,9 +263,11 @@ const ChattitudeGame = () => {
       timestamp: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
       analysis: analysis
     };
+    
     let newQuality = currentQuality;
     const playerKey = demoMsg.playerNum === 1 ? 'player1' : 'player2' as 'player1' | 'player2';
     let newStats = { ...playerStats };
+    
     if (analysis.category === 'dirty_trick' && analysis.confidence >= 75) {
       newQuality = Math.max(0, currentQuality - 10);
       newStats[playerKey].destructive += 1;
@@ -149,12 +275,14 @@ const ChattitudeGame = () => {
       newQuality = Math.min(100, currentQuality + 15);
       newStats[playerKey].constructive += 1;
     }
+    
     const updatedMessages = [...currentMessages, newMessage];
     setMessages(updatedMessages);
     setDialogQuality(newQuality);
     setPlayerStats(newStats);
     setAnalyzing(false);
     setDemoIndex(index + 1);
+    
     setTimeout(() => {
       playNextDemoMessage(index + 1, updatedMessages, newQuality);
     }, 2500);
